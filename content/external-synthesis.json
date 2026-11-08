@@ -1,0 +1,37 @@
+{
+  "sources": [
+    {
+      "id": "BRYANT86",
+      "title": "Randal E. Bryant — Graph-Based Algorithms for Boolean Function Manipulation",
+      "url": "https://www.cs.cmu.edu/~bryant/pubdir/ieeetc86.pdf",
+      "kind": "原始论文（作者注释电子版）",
+      "version": "IEEE Transactions on Computers C-35(8), pp.677–691；作者重绘图并附Update注释的28页电子版",
+      "date": "1986-08（原始发表）；电子注释版未标统一修订日期",
+      "accessed": "2026-11-08",
+      "reading": "§1–2：PDF pp.1–7，Shannon/cofactor、固定变量序、约简规则及规范性；导论中变量序敏感与表示规模最坏情形讨论。",
+      "limits": "区分1986原刊页码与28页电子版PDF页码；不引用历史机器运行时间作为现代性能，不声称对全部函数都紧凑。网站的MUX节点数为独立手算与程序穷举核验。"
+    },
+    {
+      "id": "MULTILEVEL90",
+      "title": "Robert K. Brayton / Gary D. Hachtel / Alberto L. Sangiovanni-Vincentelli — Multilevel Logic Synthesis",
+      "url": "https://people.eecs.berkeley.edu/~alanmi/publications/other/multi_level.pdf",
+      "kind": "原始综述论文（作者研究机构扫描档案）",
+      "version": "Proceedings of the IEEE 78(2), pp.264–300；37页扫描PDF",
+      "date": "1990-02",
+      "accessed": "2026-11-08",
+      "reading": "视觉核对首页印刷p.264/PDF p.1的作者和发表版本；§IV.D Kernels and Kernel Intersections，印刷p.272/PDF p.9的weak division、cube-free、kernel/co-kernel定义及Table 1。",
+      "limits": "扫描PDF无可抽取文本，采用渲染页核验；仅上述章节精读，不声称全文复现实验。kernel枚举为深入选学，课程主线仍是L25/T25的函数分解。"
+    },
+    {
+      "id": "SIS92",
+      "title": "Ellen M. Sentovich 等 — SIS: A System for Sequential Circuit Synthesis",
+      "url": "https://www2.eecs.berkeley.edu/Pubs/TechRpts/1992/2010.html",
+      "kind": "原始技术报告元数据",
+      "version": "UC Berkeley technical report UCB/ERL M92/41",
+      "date": "1992-05",
+      "accessed": "2026-11-08",
+      "reading": "Berkeley官方报告元数据页：题名、报告编号、作者和原始报告链接，用于定位L25提及的SIS背景。",
+      "limits": "原始PDF通过web获取超时，未精读全文；不引用其内部算法细节、基准数字或声称运行SIS。此来源只提供研究线索。"
+    }
+  ]
+}

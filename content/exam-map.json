@@ -1,0 +1,1141 @@
+{
+  "exams": [
+    {
+      "id": "e2019r",
+      "title": "2019_retake 标签卷（卷面日期 2020-06-29）",
+      "sourceId": "F086",
+      "year": 2020,
+      "kind": "补考标签；以卷面日期为准",
+      "date": "2020-06-29",
+      "duration": 60,
+      "totalPoints": 60,
+      "sectionTotals": {
+        "逻辑综合与优化": 35,
+        "逻辑仿真": 5,
+        "测试": 20
+      },
+      "answerSource": "F081",
+      "containsAnswers": false,
+      "questions": [
+        {
+          "number": "1a",
+          "title": "cube、multiple implicant 与 CompSOP 概念",
+          "points": 5,
+          "modules": [
+            "m02",
+            "m03",
+            "m05"
+          ],
+          "locator": "PDF p.2",
+          "skills": [
+            "计算维数与距离",
+            "辨析术语"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1b",
+          "title": "覆盖表的启发式选择",
+          "points": 4,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.2",
+          "skills": [
+            "填覆盖表",
+            "选择覆盖"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1c",
+          "title": "Quine 算法求全部素蕴含项",
+          "points": 5,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "分组合并",
+            "完整列出 PI"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1d",
+          "title": "NAND-only 与 NOR-only 代数转换",
+          "points": 3,
+          "modules": [
+            "m02"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "De Morgan",
+            "等价实现"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1e",
+          "title": "函数分解矩阵及中间编码位数",
+          "points": 3,
+          "modules": [
+            "m05"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "统计不同 cofactor",
+            "计算编码位数"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1f",
+          "title": "从 ROBDD 求 SOP、POS、CompSOP",
+          "points": 3,
+          "modules": [
+            "m06",
+            "m03"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "路径读图",
+            "形式转换"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1g",
+          "title": "cube 图和 on-set",
+          "points": 4,
+          "modules": [
+            "m02"
+          ],
+          "locator": "PDF p.5",
+          "skills": [
+            "画图",
+            "表示集合"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2a",
+          "title": "通过恒真检验删除 literal",
+          "points": 4,
+          "modules": [
+            "m04"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "cofactor",
+            "有效性证明"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2b",
+          "title": "FSM 分组最小化",
+          "points": 4,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "划分细化",
+            "最小状态表"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3a",
+          "title": "事件驱动仿真",
+          "points": 5,
+          "modules": [
+            "m08"
+          ],
+          "locator": "PDF p.7",
+          "skills": [
+            "初始化",
+            "队列",
+            "触发门与新事件"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4a",
+          "title": "全局蕴含、可测性和 AND-XOR",
+          "points": 3,
+          "modules": [
+            "m10",
+            "m11"
+          ],
+          "locator": "PDF p.8",
+          "skills": [
+            "解释机制"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4b",
+          "title": "故障覆盖、检测与区分",
+          "points": 5,
+          "modules": [
+            "m10"
+          ],
+          "locator": "PDF p.8",
+          "skills": [
+            "重建故障输出",
+            "最小测试集",
+            "诊断集"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4c",
+          "title": "AND-XOR 与输入 stuck-at 的布尔差分",
+          "points": 4,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "转换",
+            "列全部测试向量"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4d",
+          "title": "内部信号的布尔差分",
+          "points": 4,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "结构建模",
+            "灵敏化"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4e",
+          "title": "故障路径及 D 算法",
+          "points": 4,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.10",
+          "skills": [
+            "枚举结构路径",
+            "激活传播",
+            "回溯"
+          ],
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "e2020",
+      "title": "2020 正考（2020-12-03）",
+      "sourceId": "F087",
+      "year": 2020,
+      "kind": "正考",
+      "date": "2020-12-03",
+      "duration": 60,
+      "totalPoints": 60,
+      "sectionTotals": {
+        "逻辑综合与优化": 38,
+        "逻辑仿真": 7,
+        "测试": 15
+      },
+      "answerSource": "F082",
+      "containsAnswers": false,
+      "questions": [
+        {
+          "number": "1a",
+          "title": "布尔函数计数、真值表、CSOP 与表示",
+          "points": 6,
+          "modules": [
+            "m02",
+            "m03"
+          ],
+          "locator": "PDF p.2",
+          "skills": [
+            "计算",
+            "转换",
+            "解释"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1b",
+          "title": "覆盖条件、MinSOP 与 EPI",
+          "points": 5,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "写覆盖条件",
+            "选择最优覆盖"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1c",
+          "title": "POS 到 CompSOP",
+          "points": 2,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "求素蕴含项"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1d",
+          "title": "给定顺序构造 ROBDD",
+          "points": 5,
+          "modules": [
+            "m06"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "cofactor",
+            "归约",
+            "画图"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1e",
+          "title": "多输出共享 implicant 的成本",
+          "points": 6,
+          "modules": [
+            "m05"
+          ],
+          "locator": "PDF p.5",
+          "skills": [
+            "共同项",
+            "覆盖",
+            "literal 成本"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1f",
+          "title": "售货机 FSM 读图",
+          "points": 4,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "Moore/Mealy",
+            "状态表"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1g",
+          "title": "分别/同时删除 cube 与扩张",
+          "points": 4,
+          "modules": [
+            "m04"
+          ],
+          "locator": "PDF p.7",
+          "skills": [
+            "恒真检验",
+            "反例"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1h",
+          "title": "FSM 最小化和最小状态图",
+          "points": 6,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.8",
+          "skills": [
+            "等价划分",
+            "绘图"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2a",
+          "title": "事件驱动仿真表",
+          "points": 5,
+          "modules": [
+            "m08"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "时序",
+            "队列"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2b",
+          "title": "带触发器的波形",
+          "points": 2,
+          "modules": [
+            "m08"
+          ],
+          "locator": "PDF p.10",
+          "skills": [
+            "时钟采样",
+            "延迟边界"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3a",
+          "title": "AND-XOR、零布尔差分与回溯原因",
+          "points": 3,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.11",
+          "skills": [
+            "机制解释",
+            "异常分析"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3b",
+          "title": "故障覆盖与删除测试后的漏测",
+          "points": 4,
+          "modules": [
+            "m10"
+          ],
+          "locator": "PDF p.11",
+          "skills": [
+            "最小集",
+            "覆盖缺口"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3c",
+          "title": "结构故障路径与 D 算法",
+          "points": 5,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.12",
+          "skills": [
+            "路径",
+            "所有测试向量"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3d",
+          "title": "局部可观测性组合与故障树",
+          "points": 3,
+          "modules": [
+            "m12"
+          ],
+          "locator": "PDF p.13",
+          "skills": [
+            "故障仿真",
+            "FFR边界"
+          ],
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "e2021",
+      "title": "2021 正考（2021-12-10）",
+      "sourceId": "F088",
+      "year": 2021,
+      "kind": "正考",
+      "date": "2021-12-10",
+      "duration": 60,
+      "totalPoints": 60,
+      "sectionTotals": {
+        "逻辑综合与优化": 40,
+        "逻辑仿真": 6,
+        "测试": 14
+      },
+      "answerSource": "F084",
+      "containsAnswers": false,
+      "questions": [
+        {
+          "number": "1a",
+          "title": "代数恒等、on-set、cofactor、真值表",
+          "points": 6,
+          "modules": [
+            "m02"
+          ],
+          "locator": "PDF p.2",
+          "skills": [
+            "等价化简",
+            "表示"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1b",
+          "title": "CSOP、覆盖条件和启发式比较",
+          "points": 7,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "精确最优",
+            "启发式边界"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1c",
+          "title": "Resolution layer algorithm",
+          "points": 4,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "共识项",
+            "吸收",
+            "CompSOP"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1d",
+          "title": "状态编码与状态/输出函数",
+          "points": 4,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "编码",
+            "综合"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2a",
+          "title": "配置图、恒真检验与 cube 扩张",
+          "points": 6,
+          "modules": [
+            "m04"
+          ],
+          "locator": "PDF p.5",
+          "skills": [
+            "读配置图",
+            "有效变换"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2b",
+          "title": "多输出共同 implicant 的收益",
+          "points": 5,
+          "modules": [
+            "m05"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "统一成本口径",
+            "比较方案"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2c",
+          "title": "售票机 Mealy FSM 设计与找零变式",
+          "points": 4,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.7",
+          "skills": [
+            "需求建模",
+            "设计迁移"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2d",
+          "title": "1/2/3-equivalent 状态划分",
+          "points": 4,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.8",
+          "skills": [
+            "迭代细化"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3a",
+          "title": "含触发器的事件仿真",
+          "points": 3,
+          "modules": [
+            "m08"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "边沿",
+            "事件队列"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3b",
+          "title": "补全 VHDL 电路描述",
+          "points": 3,
+          "modules": [
+            "m09"
+          ],
+          "locator": "PDF p.10",
+          "skills": [
+            "接口",
+            "内部信号",
+            "敏感列表"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4a",
+          "title": "ATPG 冲突与分区降低复杂度",
+          "points": 2,
+          "modules": [
+            "m11",
+            "m13"
+          ],
+          "locator": "PDF p.11",
+          "skills": [
+            "搜索边界",
+            "机制解释"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4b",
+          "title": "布尔差分求 x/0 与 x/1 全部向量",
+          "points": 3,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.11",
+          "skills": [
+            "激活与传播"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4c",
+          "title": "学习全局蕴含与 D 算法",
+          "points": 6,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.12",
+          "skills": [
+            "学习准则",
+            "可控性",
+            "搜索"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4d",
+          "title": "组合局部可观测性构造故障集",
+          "points": 3,
+          "modules": [
+            "m12"
+          ],
+          "locator": "PDF p.13",
+          "skills": [
+            "good simulation",
+            "fault simulation"
+          ],
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "e2021r",
+      "title": "21_retake 标签答案卷（卷面日期 2022-05-06）",
+      "sourceId": "F089",
+      "year": 2022,
+      "kind": "补考；文件内含标准答案",
+      "date": "2022-05-06",
+      "duration": 60,
+      "totalPoints": 60,
+      "sectionTotals": {
+        "逻辑综合与优化": 35,
+        "逻辑仿真": 5,
+        "测试": 20
+      },
+      "answerSource": "F089",
+      "containsAnswers": true,
+      "questions": [
+        {
+          "number": "1a",
+          "title": "cube、共同 implicant、Quine 最坏情况",
+          "points": 7,
+          "modules": [
+            "m02",
+            "m03",
+            "m05"
+          ],
+          "locator": "PDF p.2",
+          "skills": [
+            "组合计数",
+            "概念辨析"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1b",
+          "title": "启发式覆盖与真正 MinSOP",
+          "points": 3,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.2",
+          "skills": [
+            "检查启发式是否最优"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1c",
+          "title": "含 don’t-care 的最小化",
+          "points": 3,
+          "modules": [
+            "m02",
+            "m03"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "on-set/DC分离"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1d",
+          "title": "函数分解与 LUT 存储值",
+          "points": 3,
+          "modules": [
+            "m05"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "编码",
+            "LUT实现"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1e",
+          "title": "删除 cube / literal 的恒真条件",
+          "points": 5,
+          "modules": [
+            "m04"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "分别和同时的区别"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1f",
+          "title": "ROBDD 分解条件和 cofactor",
+          "points": 5,
+          "modules": [
+            "m06",
+            "m05"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "图上分解",
+            "函数重建"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1g",
+          "title": "cube 图与 MinSOP",
+          "points": 3,
+          "modules": [
+            "m02",
+            "m03"
+          ],
+          "locator": "PDF p.5",
+          "skills": [
+            "图形覆盖"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2a",
+          "title": "FSM 状态表与寄存器数量",
+          "points": 3,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "读图",
+            "编码位数"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2b",
+          "title": "FSM 等价划分",
+          "points": 3,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "细化"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3a",
+          "title": "事件驱动仿真",
+          "points": 5,
+          "modules": [
+            "m08"
+          ],
+          "locator": "PDF p.7",
+          "skills": [
+            "事件发生时刻",
+            "调度"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4a",
+          "title": "全局蕴含、可测性、AND-XOR",
+          "points": 3,
+          "modules": [
+            "m10",
+            "m11"
+          ],
+          "locator": "PDF p.8",
+          "skills": [
+            "机制解释"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4b",
+          "title": "检测集与故障区分集",
+          "points": 5,
+          "modules": [
+            "m10"
+          ],
+          "locator": "PDF p.8",
+          "skills": [
+            "覆盖条件",
+            "诊断"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4c",
+          "title": "输入故障的布尔差分",
+          "points": 4,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "全部向量"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4d",
+          "title": "内部信号的布尔差分",
+          "points": 4,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "电路到代数"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4e",
+          "title": "结构路径与 D 算法",
+          "points": 4,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.10",
+          "skills": [
+            "传播",
+            "回溯"
+          ],
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "e2022r",
+      "title": "DMA22_retake 标签卷（卷面日期 2023-06-20）",
+      "sourceId": "F055",
+      "year": 2023,
+      "kind": "NM6004 Retake",
+      "date": "2023-06-20",
+      "duration": 60,
+      "totalPoints": 60,
+      "sectionTotals": {
+        "逻辑综合与优化": 39,
+        "逻辑仿真": 6,
+        "测试": 15
+      },
+      "answerSource": "F085",
+      "containsAnswers": false,
+      "questions": [
+        {
+          "number": "1a-g",
+          "title": "cube、on-set、CSOP/MinSOP、Quine 计数与 ROBDD 唯一性",
+          "points": 8,
+          "modules": [
+            "m02",
+            "m03",
+            "m06"
+          ],
+          "locator": "PDF p.2",
+          "skills": [
+            "计算",
+            "解释反例"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1h",
+          "title": "五变量 Quine-McCluskey",
+          "points": 5,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "逐轮合并",
+            "全部PI"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1i",
+          "title": "覆盖表与启发式选择",
+          "points": 3,
+          "modules": [
+            "m03"
+          ],
+          "locator": "PDF p.3",
+          "skills": [
+            "最小覆盖"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1j",
+          "title": "ROBDD 与简化 SOP",
+          "points": 3,
+          "modules": [
+            "m06"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "构造",
+            "读图"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "1k",
+          "title": "Shannon 展开和二输入门实现",
+          "points": 3,
+          "modules": [
+            "m02",
+            "m06"
+          ],
+          "locator": "PDF p.4",
+          "skills": [
+            "公式",
+            "画电路"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2a-b",
+          "title": "literal removal 恒真检验",
+          "points": 2,
+          "modules": [
+            "m04"
+          ],
+          "locator": "PDF p.5",
+          "skills": [
+            "合法扩张"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2c",
+          "title": "单独与共同 cube removal",
+          "points": 3,
+          "modules": [
+            "m04"
+          ],
+          "locator": "PDF p.5",
+          "skills": [
+            "条件变化",
+            "反例"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2d",
+          "title": "ROBDD 到 LUT 分解表",
+          "points": 4,
+          "modules": [
+            "m05",
+            "m06"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "绑定/自由变量",
+            "编码"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2e",
+          "title": "分解后不可达编码形成 don’t-care",
+          "points": 2,
+          "modules": [
+            "m05"
+          ],
+          "locator": "PDF p.6",
+          "skills": [
+            "编码约束"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "2f",
+          "title": "四轮状态等价和最小 Mealy 图",
+          "points": 6,
+          "modules": [
+            "m07"
+          ],
+          "locator": "PDF p.7",
+          "skills": [
+            "分组细化",
+            "绘图"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "3",
+          "title": "完整事件表和波形",
+          "points": 6,
+          "modules": [
+            "m08"
+          ],
+          "locator": "PDF p.8",
+          "skills": [
+            "初始化",
+            "门求值",
+            "事件",
+            "波形"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4a-c",
+          "title": "故障模型、fanout stem、D 算法失败边界",
+          "points": 3,
+          "modules": [
+            "m10",
+            "m11",
+            "m12"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "模型限制",
+            "局部/全局区分"
+          ],
+          "notes": "指定路径搜索失败不等于所有路径均失败。"
+        },
+        {
+          "number": "4d",
+          "title": "故障覆盖条件",
+          "points": 3,
+          "modules": [
+            "m10"
+          ],
+          "locator": "PDF p.9",
+          "skills": [
+            "最小测试集"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4e",
+          "title": "AND-XOR 与布尔差分",
+          "points": 3,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.10",
+          "skills": [
+            "输入故障测试向量"
+          ],
+          "notes": ""
+        },
+        {
+          "number": "4f-g",
+          "title": "结构路径与指定路径 D 算法",
+          "points": 6,
+          "modules": [
+            "m11"
+          ],
+          "locator": "PDF p.11",
+          "skills": [
+            "故障传播",
+            "可行性与回溯"
+          ],
+          "notes": ""
+        }
+      ]
+    }
+  ],
+  "cautions": [
+    "题型分数是所给历史卷的描述，不是本次补考的概率预测、考纲或分数承诺。",
+    "卷面日期优先于文件名。19_retake 对应 2020-06-29；21_retake 对应 2022-05-06；DMA22_retake 对应 2023-06-20。",
+    "F083、F089、F050、F051为同一场2022-05-06考试的不同副本或答案版本；不作为四场独立样本。F089正文直接给出答案，不能当作首次盲测。",
+    "在5场样本中，综合与优化占35–40/60分，仿真5–7/60分，测试14–20/60分。统计单元为独立考试，且每卷按原题大项归类一次；VHDL计入仿真。",
+    "历史卷允许纸质资料和计算器，这只能描述历史规则；请以本次考试通知确认允许资料、计算器类型和时长。网站的默认60分钟模拟不是对本次规则的确认。",
+    "PDF文本提取容易丢失反相横线与图形门类型；本索引只提取题型和分数，做原题时必须看原PDF图，不从抽取文字猜公式。"
+  ]
+}

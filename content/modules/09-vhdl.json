@@ -1,0 +1,196 @@
+{
+  "id": "m09",
+  "number": 9,
+  "title": "VHDL：读懂并发与赋值的真实含义",
+  "subtitle": "从signal、variable到进程、综合和自检testbench",
+  "category": "仿真验证",
+  "priority": "must",
+  "minutes": 100,
+  "prerequisites": [
+    "m08"
+  ],
+  "related": [
+    "m07",
+    "m13"
+  ],
+  "objectives": [
+    "根据进程唤醒与signal更新规则手算运行结果",
+    "分别写出组合逻辑、锁存器和边沿触发寄存器",
+    "发现敏感列表缺项、未赋值分支和多驱动等错误",
+    "用可重复的输入与断言验证模型，而非只看波形"
+  ],
+  "keyQuestion": "为什么同一段process里两行看似顺序的赋值，得到的硬件与软件直觉不同？",
+  "sourceRefs": [
+    {
+      "id": "L25",
+      "locator": "II.4，印刷 pp.64–68；PDF pp.68–72"
+    },
+    {
+      "id": "T25",
+      "locator": "Tutorial 6，印刷 pp.65–71；PDF pp.67–73"
+    },
+    {
+      "id": "IEEE1076",
+      "locator": "IEEE 1076-2019官方元数据；仅核对规范身份、范围和发布日期"
+    },
+    {
+      "id": "GHDL-STD",
+      "locator": "Implementation of VHDL：VHDL standards；标准模式与部分实现限制"
+    },
+    {
+      "id": "GHDL-SIM",
+      "locator": "Simulation options：断言、时间与delta选项"
+    }
+  ],
+  "sections": [
+    {
+      "id": "structure",
+      "title": "把文件结构与硬件结构分开",
+      "body": "`entity`说明接口：模块名、输入输出、类型与可配置generic。`architecture`说明实现，可以是逻辑表达式、若干并发process，也可以实例化子模块。不同architecture可实现同一entity，configuration或实例绑定负责选中具体实现。testbench通常没有外部端口，在内部生成激励并观察待测模块。\n\narchitecture中并列的语句是并发关系；process内部语句按书写顺序执行。这里的“并发”是语言语义，并不要求宿主电脑为每个process分配一个CPU线程。普通进程运行到`wait`暂停；带敏感列表的进程在结尾有等效等待。不要同时给一个普通process写敏感列表又在其内部写wait。没有任何等待的无限循环可能把模拟器卡在同一时刻。\n\n课程教程保留了旧版VHDL写法，例如使用内部信号读取输出。VHDL-2008允许读取out端口，`process(all)`也是2008特性。考试若没有声明支持新语法，沿用课程的内部信号与显式完整敏感列表最稳妥。本文示例会标注版本，避免用一个版本的限制解释另一个版本的代码。IEEE1076来源只读取了公开元数据，完整标准条文需要购买或订阅；语义教学以L25/T25及GHDL文档交叉核验，不冒称查过未访问的条款号。"
+    },
+    {
+      "id": "signals",
+      "title": "示范：一拍延迟来自哪里",
+      "body": "看下面的时钟进程。`s,q,r,a`均为bit，初值$s=q=r=0$；`v`是process局部变量。`clk`使用std_logic，并已通过`use ieee.std_logic_1164.all;`引入对应的rising_edge函数。每个上升沿调用一次：\n\n```vhdl\nprocess(clk)\n  variable v : bit;\nbegin\n  if rising_edge(clk) then\n    s <= a;\n    q <= s;\n    v := a;\n    r <= v;\n  end if;\nend process;\n```\n\n若第一个上升沿到来前$a=1$，执行`s <= a`只是安排$s$将来更新为1，接下来的`q <= s`仍读到旧$s=0$。变量`v := a`立即把v变成1，所以`r <= v`安排$r=1$。该轮signal更新后得到$s=1,q=0,r=1$；若第二个沿前$a=0$，之后为$s=0,q=1,r=0$。\n\n这不是“signal永远晚一拍”。零延迟signal在后续delta生效；此处$q$晚一拍，是因为它只在下一次时钟沿再次读$s$。若是组合进程且对$s$敏感，可能在同一物理时间的下一delta重新求值。也不是“variable不产生寄存器”：变量若跨时钟使用旧值，同样可能需要存储。判断硬件应看数据依赖和所有执行路径，而不是看到一个关键字就下结论。"
+    },
+    {
+      "id": "combinational",
+      "title": "组合逻辑：完整敏感、完整赋值",
+      "body": "一个2:1多路选择器可写成：\n\n```vhdl\nprocess(a, b, sel) -- 兼容课程显式列表写法\nbegin\n  if sel = '0' then\n    y <= a;\n  else\n    y <= b;\n  end if;\nend process;\n```\n\n每条路径都给y赋值，所以输出仅依赖当前输入。若使用VHDL-2008模式，可改为`process(all)`减少遗漏风险。若写`process(a,sel)`却在分支里读取b，当sel=1而只有b变化时仿真进程不会唤醒，输出可能保持旧值；综合工具却可能推导出正常mux，产生仿真与综合差异。\n\n若去掉else，sel=1时y不被赋新值，语言语义是保留旧值，综合通常需要锁存器。修复方法取决于设计意图：组合逻辑可先写默认`y <= b;`再由if覆盖；需要真正锁存器则应明确保持条件并检查时序。默认赋值不是随便填0：它必须符合规格。\n\n单个进程同一轮对同一signal安排同一目标时刻的多个赋值，后面的赋值会覆盖相应旧事务，例如`y <= a; y <= b;`最终安排b。不同process同时驱动同一signal是多驱动问题，不适用“文件中最后一行胜出”。std_logic有解析函数；bit没有这种解析，不能依赖它来合并多个驱动。"
+    },
+    {
+      "id": "clocked",
+      "title": "寄存器、锁存器和延迟语句的边界",
+      "body": "标准边沿寄存器结构是`if rising_edge(clk) then q <= d; end if;`。异步复位写在进程外层条件，复位信号也进入敏感列表；同步复位只在时钟沿内检查。是否有复位、有效电平、优先级都来自规格。不能为了让波形好看擅自添加复位。\n\n`if en='1' then q<=d; end if;`若放在组合敏感进程中，描述电平敏感保持元件；相同if放在时钟沿内部描述带使能的触发器。画图时先找时钟事件判定，再找保持路径，这比背诵模板可靠。\n\n`after 5 ns`是仿真时间模型，不应据此推断综合器会自动造出一个精确5 ns延迟单元。`wait for`常用于testbench时钟或激励，通常不属于目标RTL综合子集。可综合与否还依赖工具、目标器件和支持子集。编译通过仅表示语法和类型等检查通过，不表示行为符合需求，也不表示一定能映射到硬件。\n\nstd_logic的U通常表示尚未初始化，X可由冲突或运算不确定传播，Z表示高阻；bit只有0/1，可能掩盖初始化类问题。教学小例可用bit简化推演，工程测试需明确类型与初值，不能把二值实验的成功当成所有未知态都已处理。"
+    },
+    {
+      "id": "testbench",
+      "title": "自检比“波形看起来正确”更可靠",
+      "body": "先确定输入组合和预期结果，再写断言。对于零延迟组合mux，可以在testbench中依次施加全部$a,b,sel$组合，在模型规定的稳定窗口检查输出。若施加输入后立即assert，进程可能读到尚未更新的旧输出；可等待足够的delta稳定，或在纯零延迟教学testbench中等待1 ns。这个1 ns是测试安排，不是电路真实延迟。\n\n```vhdl\na <= '1'; b <= '0'; sel <= '0';\nwait for 1 ns;\nassert y = '1'\n  report \"mux selected wrong input\" severity failure;\nsel <= '1';\nwait for 1 ns;\nassert y = '0'\n  report \"mux selection failed\" severity failure;\n```\n\n独立实验可以使用`ghdl -a --std=08 file.vhd`分析、`ghdl -e --std=08 tb`展开、`ghdl -r --std=08 tb --assert-level=error --stop-time=100ns --wave=tb.ghw`运行。代码中的entity名须与tb匹配；三步标准模式要保持一致。这些是可复现实验说明，网站里的演示不是GHDL，也不声称支持任意VHDL程序。\n\n验证至少包含正常选择、只有未选中输入变化、只有选中输入变化、sel边界切换、初始状态。时序电路还需复位、保持、连续多拍和使能停止。将断言失败定位到“输入施加、更新轮次、预期表达式”三个环节，而不是先改预期值去迎合错误输出。"
+    },
+    {
+      "id": "tradeoff",
+      "title": "案例：一个mux为何三种描述都能成立",
+      "body": "问题是实现同一个$y=\\bar s a+sb$。基线为门级结构描述：显式NOT、AND、OR，方便观察路径和毛刺；行为式条件赋值简洁，适合说明功能；process写法适合更复杂控制。统一比较前，要让三种描述使用相同类型、相同延迟假设与同样激励。一个有门延迟、另一个零延迟时，波形不同并不能证明功能不等价。\n\n代价与适用条件：结构式暴露实现细节，修改成本高；行为式把技术映射交给综合器，更易维护，但不能仅从源码推断最终门数量和时序。反例是测试某路径冒险：零延迟条件赋值模型往往没有对应内部节点，不能用它证明门网络无毛刺。验证办法是先穷举稳态真值表检查功能，再对带延迟实现单独做事件仿真与时序检查。\n\n完成本章的证据是：能口头说明“进程内顺序、进程间并发、signal延后更新”三者如何同时成立；能在纸上预测两次时钟沿的s/q/r；能指出一个遗漏敏感信号和一个未赋值分支。若这些已熟悉，可跳过语法速读，直接做后面的调试与迁移题。"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "m09-q1",
+      "type": "text",
+      "stage": "补全",
+      "prompt": "本章s/q/r例中初始s=0；连续两个上升沿前a依次为1、0。写出每个沿后的(s,q,r)。",
+      "answer": "第一沿(1,0,1)，第二沿(0,1,0)。q读取本轮执行前的s；r读取本轮立即更新的v。",
+      "rubric": [
+        "第一沿正确",
+        "第二沿正确",
+        "signal读取旧值",
+        "变量立即赋值"
+      ],
+      "maxScore": 4
+    },
+    {
+      "id": "m09-q2",
+      "type": "numeric",
+      "stage": "补全",
+      "prompt": "进程同一次执行依次写 x <= 1 after 5 ns; x <= 2 after 5 ns;。同一driver、同一目标时刻最终计划的数值是多少？",
+      "answer": "最终为2。第二条赋值覆盖该driver同一目标时刻的旧事务；这不能推广成多个进程中的“最后写入者胜出”。",
+      "rubric": [
+        "结果2",
+        "限定单driver"
+      ],
+      "maxScore": 2,
+      "expected": 2,
+      "tolerance": 0,
+      "unit": ""
+    },
+    {
+      "id": "m09-q3",
+      "type": "text",
+      "stage": "独立",
+      "prompt": "代码 process(a,sel) begin if sel='0' then y<=a; else y<=b; end if; end process; 存在什么问题？给出能暴露问题的激励。",
+      "answer": "敏感列表缺b。先置sel=1、b=0使输出0；保持a与sel不变，把b改1，进程不会唤醒，仿真输出可能仍0。修复为process(a,b,sel)，或在VHDL-2008模式使用process(all)。",
+      "rubric": [
+        "发现缺b",
+        "构造只有b变化",
+        "解释不会唤醒",
+        "给出版本正确修复"
+      ],
+      "maxScore": 4
+    },
+    {
+      "id": "m09-q4",
+      "type": "text",
+      "stage": "独立",
+      "prompt": "process(d,en) begin if en='1' then q<=d; end if; end process; 是组合门、锁存器还是边沿触发器？若规格要求组合mux，该如何修改？",
+      "answer": "它描述en高时透明、低时保持的锁存器，没有时钟沿条件。若规格是en?d:r，补else q<=r；若规格是en?d:0，补else q<='0'。缺省值必须由规格决定。",
+      "rubric": [
+        "认出锁存器",
+        "指出保持分支",
+        "指出没有边沿",
+        "按明确规格补赋值"
+      ],
+      "maxScore": 4
+    },
+    {
+      "id": "m09-q5",
+      "type": "text",
+      "stage": "迁移",
+      "prompt": "设计一个反例说明“variable立即生效，所以不可能综合成寄存器”错误。",
+      "answer": "在时钟进程内先令q<=v，再执行v:=d；v需要保存上一次时钟的值，通常需要寄存器。立即生效描述的是本次process执行的变量语义，不排除跨时钟保留状态。",
+      "rubric": [
+        "时钟进程",
+        "先读取旧v",
+        "再赋新v",
+        "区分语义与硬件存储"
+      ],
+      "maxScore": 4
+    },
+    {
+      "id": "m09-q6",
+      "type": "text",
+      "stage": "迁移",
+      "prompt": "一个组合电路刚改输入就assert失败，但等1 ns后通过。给出两种可能解释和验证办法，不直接宣布电路正确。",
+      "answer": "可能只是零延迟signal尚未经过delta更新，也可能真实模型含非零传播延迟或组合反馈。检查driver、模型延迟与delta日志；在模型规定的稳定窗口比较全部关键输入，另外检查中间毛刺或不收敛。等1 ns一次通过不覆盖其它输入，也不证明物理时序。",
+      "rubric": [
+        "考虑delta未更新",
+        "考虑非零延迟/反馈",
+        "定义采样窗口",
+        "指出一次通过的限制"
+      ],
+      "maxScore": 4
+    }
+  ],
+  "glossary": [
+    {
+      "term": "接口体",
+      "en": "entity",
+      "definition": "定义模块端口与generic，不规定内部实现。"
+    },
+    {
+      "term": "结构体",
+      "en": "architecture",
+      "definition": "一个entity的实现描述，可行为式或结构式。"
+    },
+    {
+      "term": "信号赋值",
+      "en": "signal assignment",
+      "definition": "<=安排driver事务；不会立即改变当前进程读取的signal。"
+    },
+    {
+      "term": "变量赋值",
+      "en": "variable assignment",
+      "definition": ":=立即改变变量的当前值；是否需要硬件存储取决于用法。"
+    },
+    {
+      "term": "敏感列表",
+      "en": "sensitivity list",
+      "definition": "决定哪些信号event可重新激活该进程。"
+    },
+    {
+      "term": "自检测试平台",
+      "en": "self-checking testbench",
+      "definition": "自动产生激励并用断言比较预期结果的仿真环境。"
+    }
+  ]
+}

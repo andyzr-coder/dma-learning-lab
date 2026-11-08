@@ -1,0 +1,180 @@
+{
+  "id": "m02",
+  "number": 2,
+  "title": "布尔空间、cube 与 Shannon 展开",
+  "subtitle": "把公式读成集合，把消元读成固定输入",
+  "category": "逻辑综合",
+  "priority": "must",
+  "minutes": 120,
+  "prerequisites": [
+    "m01"
+  ],
+  "related": [
+    "m03",
+    "m04",
+    "m06",
+    "m11"
+  ],
+  "keyQuestion": "一个横杠到底代表多少点，固定一个变量以后为什么能重建整个函数？",
+  "objectives": [
+    "在 minterm、cube、集合、SOP/POS 之间互换",
+    "计算维数、覆盖点数、cube 距离与包含关系",
+    "求 cofactor、Shannon 展开、Boolean difference",
+    "用严格包含关系判断 unate 与变量依赖"
+  ],
+  "sourceRefs": [
+    {
+      "id": "L25",
+      "locator": "2025-10-31；I.1–I.2，印刷 pp.9–20 / PDF pp.13–24"
+    },
+    {
+      "id": "T25",
+      "locator": "Tutorial 1，印刷 pp.3–12 / PDF pp.5–14"
+    }
+  ],
+  "sections": [
+    {
+      "id": "language",
+      "title": "先统一符号：同一个“加号”有两种语义",
+      "body": "本课程用 $+$ 表示 OR，用并写或 $\\cdot$ 表示 AND，用 $\\bar x$ 或 ASCII `x'` 表示 NOT；$\\oplus$ 是 XOR。布尔代数有 $x+x=x$，所以不要套整数规则 $x+x=2x$。常用法则要能正反使用：吸收 $x+xy=x$；分配 $x(y+z)=xy+xz$；另一条分配 $x+yz=(x+y)(x+z)$；De Morgan $\\overline{xy}=\\bar x+\\bar y$。后一条意味着翻转整个门时也要翻转输入和门类型。\n\n例：$f=ab+\\bar ab$，提取 b 得 $b(a+\\bar a)=b$。每一步是集合并/交的等式，不是“把 a 消掉”的口诀。再看 $ab+\\bar ac+bc$：$bc$ 是前两项的 consensus，可被吸收；但是 $ab+\\bar ac$ 一般不等于 $b+c$，输入 $a=1,b=0,c=1$ 就是反例。学会找一个反例比盲目展开更快。\n\n变量顺序必须显式写出，例如 $abc$ 的 101 是 $a=1,b=0,c=1$，对应十进制 minterm 5。输入空间有 $2^n$ 个点；所有完全指定单输出布尔函数有 $2^{2^n}$ 个，不是 $2^n$。这是“输入有几种”和“可给每个输入安排多少种输出表”两个不同计数问题。来源：L25 PDF pp.13–19。"
+    },
+    {
+      "id": "cube",
+      "title": "cube：少一个 literal，就多一个自由维度",
+      "body": "cube 是一组固定了部分比特的输入点。$n$ 变量空间中，一个含 k 个不同且一致 literal 的乘积项维数为 $d=n-k$，覆盖 $2^d$ 个 minterm。三变量 `1-0` 是 $a\\bar c$，覆盖 100 与 110，维数 1；`---` 是常量 1，覆盖全部 8 点，维数 3；`101` 是 minterm，维数 0。空集 0 不是通常的非空 cube，不能把相互矛盾的 $a\\bar a$ 算作“2 literal、维数 n−2”。\n\n每位可写 0、1、横杠，故非空 cube 总数为 $3^n$。恰好 d 维的 cube 数为 $\\binom nd2^{n-d}$：先选自由位置，再给其余位赋值。比如三变量的 1-cube 有 $\\binom31 2^2=12$，也等于立方体的 12 条边。四维的 1-cube 有 32 条边。这是 Quine 第一轮最多可能产生多少不同 1-cube 的来源。\n\n两个 cube 的距离按本课口径是**发生相反固定值的位置数**，也等于从两集合各取一点的最小 Hamming 距离。例如 `1-0` 与 `0-1` 在 a、c 上冲突，距离为 2；`1-0` 与 `-10` 距离为 0，交集为 110。距离 0 不等于两个 cube 相同；也不等于一个包含另一个。包含检验是“更大集合的每个固定条件都被更小集合满足”：`110` 包含于 `1-0`，而不是反过来。"
+    },
+    {
+      "id": "sets",
+      "title": "On/off/DC 与 SOP/POS 的转换",
+      "body": "完全指定函数的 on-set F 是必须为 1 的点，off-set R 是必须为 0 的点。若有 don’t-care D，则 F、D、R 两两不交且并集为 $B^n$；一个合法实现 g 满足 $F\\subseteq on(g)\\subseteq F\\cup D$。cube 中的横杠表示该输入变量自由，而真值表输出栏的星号表示规范未约束输出，二者虽然常用同一符号，语义不同。\n\n原创示范：变量 abc，$F=\\{1,3,5,7\\}$，即 c=1 的四点。CSOP 写成 $\\bar a\\bar bc+\\bar abc+a\\bar bc+abc$，全部合并得到 $f=c$。off-set 为 0、2、4、6；CPOS 是对应四个 maxterm 的积。对输入 010，令该和项恰为 0 的式子是 $(a+\\bar b+c)$，因此 maxterm 中 0 对应正 literal、1 对应负 literal，正好与 minterm 相反。\n\n一般求 POS 的稳妥方法：先求补函数 $\\bar f$ 的 SOP，再整体取反并应用 De Morgan。例如 $\\bar f=ab+\\bar ac$，则 $f=(\\bar a+\\bar b)(a+\\bar c)$。不要把 SOP 中每个乘号换加号却忘记整体补关系。要检查时，挑一个 on-set 和一个 off-set 点代入；小函数可穷举全部点。canonical 表示全部 minterm/maxterm，complete SOP 表示全部 PI，这两个单词不是同义词。"
+    },
+    {
+      "id": "shannon",
+      "title": "完整示范：固定输入、重建函数、得到 MUX",
+      "body": "取 $f(a,b,c)=ab+\\bar ac$。固定 a=1 时，$f_{a=1}=b$；固定 a=0 时，$f_{a=0}=c$。cofactor 是把变量替换为常数后得到剩余变量的函数，不是普通代数求导。Shannon 展开为：\n\n$$f=a f_{a=1}+\\bar a f_{a=0}=ab+\\bar ac.$$\n\n证明只需分 a=1 和 a=0 两种情形；此时一个分支被屏蔽，另一个分支被选中。因此它正是 2:1 MUX：a 为选择，b 为 a=1 的数据，c 为 a=0 的数据。若画图，必须在边上标 0、1，不能只靠左右方位猜。连续固定不同变量可交换次序，例如 $f_{a=0,b=1}=c=f_{b=1,a=0}$。\n\n沿 b 展开也成立：$f_{b=1}=a+\\bar ac=a+c$，$f_{b=0}=\\bar ac$，所以 $f=b(a+c)+\\bar b\\bar ac$。表达式变长并不表示推导错了；不同分解变量会导致不同的 BDD 大小和电路结构。把 cofactor 类比为程序中“把某个参数设为常量后部分求值”很有用，但布尔函数没有程序的副作用和执行顺序，不能把公式里的左右顺序当时间先后。来源：L25 PDF pp.19、24。"
+    },
+    {
+      "id": "properties",
+      "title": "依赖、单调、量词与布尔差分",
+      "body": "变量 a 的布尔差分为 $\\partial f/\\partial a=f_{a=0}\\oplus f_{a=1}$。对 MUX 例，它等于 $b\\oplus c$：当 b=c，改变选择 a 不影响输出；当 b≠c，改变 a 会翻转输出。**独立于 a** 等价于这个差分恒为 0；**依赖于 a** 只要求存在某个输入使差分为 1，即差分不恒为 0，不要求处处为 1。这一点在 PDF 文本抽取丢失否定符号时尤其容易看错。\n\npositive unate 意味着 $f_{a=0}\\subseteq f_{a=1}$：固定其他输入后，a 从 0 到 1 不能把输出从 1 变 0。negative unate 方向相反。若两个方向都不成立，就是 binate。MUX 对 a 为 binate：取 b=1,c=0，a 升高输出升高；取 b=0,c=1，a 升高输出降低。它对 b 和 c 则是 positive unate。独立变量同时满足正、负 unate，不能因此认定定义矛盾。\n\nConsensus/全称消元为 $\\forall a\\,f=f_{a=0}f_{a=1}$；smoothing/存在消元为 $\\exists a\\,f=f_{a=0}+f_{a=1}$。对 MUX 例分别得到 bc 与 b+c。前者问“不论 a 如何都为 1 吗”，后者问“能否选一个 a 使它为 1”。恒真证明需要两个 cofactor 都恒为 1；一个分支为 1 只证明部分输入成立。布尔差分会在故障传播中再次出现，cofactor 会在 BDD、启发式合法性和分解中反复使用。"
+    },
+    {
+      "id": "verify",
+      "title": "你该怎样在纸上验证自己",
+      "body": "每次转换先写变量序与假设，再写集合或真值表作独立检查。若题目要求某个 cube 属于函数，使用 $c\\subseteq f\\Leftrightarrow f|_c\\equiv1$，这里 $f|_c$ 表示固定 c 中所有 literal，使其为真。例如 $c=ab$，就取 a=1,b=1。注意 $f|_c=1$ 要对剩余所有输入都成立，而不是随便再取一组值验证。\n\n发现答案不同时，先检查输出补号、变量顺序和 CSOP/CompSOP 混淆，再检查代数。这三种抄写错误比算法本身更常见。PDF 文本中的上划线可能在提取时丢失，本网站统一重写了公式；对原卷图上的补号有疑问时应回看渲染页。能力验收是能在 10 分钟内把一个三变量函数写成真值表、求两个 cofactor、给出一条合法扩张和一条反例；做到后即可进入 QM。"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "m02-q1",
+      "type": "numeric",
+      "stage": "补全",
+      "prompt": "在 B^7 中，cube 1-0--11 的维数是多少？",
+      "answer": "有 4 个固定 literal、3 个横杠，维数 d=7−4=3，覆盖 8 个点。",
+      "rubric": [
+        "维数正确",
+        "区分维数与覆盖点数"
+      ],
+      "maxScore": 2,
+      "expected": 3,
+      "tolerance": 1e-09,
+      "unit": "维"
+    },
+    {
+      "id": "m02-q2",
+      "type": "numeric",
+      "stage": "独立",
+      "prompt": "在 B^4 中，恰好 1 维的非空 cube 有多少个？",
+      "answer": "先选 1 个自由位置，有 4 种；余下三位各有 0/1，共 8 种；结果 32。",
+      "rubric": [
+        "组合式正确",
+        "结果正确"
+      ],
+      "maxScore": 2,
+      "expected": 32,
+      "tolerance": 1e-09,
+      "unit": "个"
+    },
+    {
+      "id": "m02-q3",
+      "type": "text",
+      "stage": "独立",
+      "prompt": "对 f=ab+a'c，求 f|a=0、f|a=1、关于 a 的差分，并给出 a 不影响输出的一类输入。",
+      "answer": "cofactors 分别是 c、b，差分 b XOR c。b=c 时差分为 0，因此 a 不影响输出；函数整体仍依赖 a。",
+      "rubric": [
+        "cofactors 正确",
+        "差分正确",
+        "条件 b=c",
+        "局部不敏感与整体独立区分"
+      ],
+      "maxScore": 4
+    },
+    {
+      "id": "m02-q4",
+      "type": "text",
+      "stage": "独立",
+      "prompt": "求 1-0 与 -10 的距离和交集，并解释距离 0 为什么不表示相同。",
+      "answer": "没有相反固定值，距离 0；交集为 110。前者还含 100，后者还含 010，所以集合不同。",
+      "rubric": [
+        "距离 0",
+        "交集 110",
+        "给出集合不同证据"
+      ],
+      "maxScore": 3
+    },
+    {
+      "id": "m02-q5",
+      "type": "text",
+      "stage": "迁移",
+      "prompt": "有人从“f|a=1 恒为 1”推出 f 恒真。构造最小反例，并给正确判据。",
+      "answer": "取 f=a：a=1 分支恒为 1，a=0 分支为 0。正确判据是两个 cofactor 都恒为 1。",
+      "rubric": [
+        "有效反例",
+        "两分支正确判据",
+        "说明量词是全部输入"
+      ],
+      "maxScore": 3
+    },
+    {
+      "id": "m02-q6",
+      "type": "text",
+      "stage": "迁移",
+      "prompt": "对 f=ab+a'c 判断 a 是否 positive unate、negative unate 或 binate，必须给证据。",
+      "answer": "b=1,c=0 时 a:0→1 使 f:0→1；b=0,c=1 时使 f:1→0。两种单调方向都被反例否定，因此 a 是 binate。",
+      "rubric": [
+        "两组输入正确",
+        "变化方向正确",
+        "结论 binate",
+        "不只凭表达式同时出现 a 与 a' 下结论"
+      ],
+      "maxScore": 4
+    }
+  ],
+  "glossary": [
+    {
+      "term": "立方项",
+      "en": "Cube",
+      "definition": "固定部分变量而让其余变量自由的输入点集合。"
+    },
+    {
+      "term": "余因子",
+      "en": "Cofactor",
+      "definition": "把指定变量固定为常数后的剩余函数。"
+    },
+    {
+      "term": "不关心集合",
+      "en": "Don’t-care set",
+      "definition": "规范允许实现输出取 0 或 1 的输入集合。"
+    },
+    {
+      "term": "单极性",
+      "en": "Unate",
+      "definition": "对某变量在全部其他输入固定时只呈一个单调方向。"
+    },
+    {
+      "term": "布尔差分",
+      "en": "Boolean difference",
+      "definition": "同一变量两个 cofactor 的 XOR，表示翻转该变量是否改变输出。"
+    }
+  ]
+}

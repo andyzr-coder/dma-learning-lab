@@ -1,0 +1,14 @@
+node_modules/
+research/
+tmp/
+qa/*.png
+qa/*.log
+dist/
+*.aux
+*.log
+*.toc
+*.out
+*.tex
+tools/github_private.py
+tools/extract_sources.py
+tools/build-source-registry.py

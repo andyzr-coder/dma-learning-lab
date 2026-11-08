@@ -1,0 +1,426 @@
+{
+  "date": "2026-11-08",
+  "scope": "H:/DMA_RETAKE 及子目录的真实PDF；排除 __MACOSX/._资源分叉文件。",
+  "inventory": {
+    "files": 101,
+    "pages": 1710,
+    "uniqueBinaryFiles": 98,
+    "zeroTextFiles": 10,
+    "smallTextFiles": 38,
+    "note": "files/page数含重复副本和合订本。扫描页的文字提取量不能代表内容量或阅读完成度。"
+  },
+  "duplicates": [
+    {
+      "sources": [
+        "F044",
+        "F086"
+      ],
+      "basis": "SHA-256完全相同"
+    },
+    {
+      "sources": [
+        "F047",
+        "F087"
+      ],
+      "basis": "SHA-256完全相同"
+    },
+    {
+      "sources": [
+        "F050",
+        "F089"
+      ],
+      "basis": "SHA-256完全相同"
+    }
+  ],
+  "contentOverlap": [
+    {
+      "sources": [
+        "F001",
+        "F070",
+        "F009"
+      ],
+      "basis": "同一112页讲义体系；F001封面Issue October 31, 2025；F070有注释且文本/文件大小不同；F009旧版须单独标年份。不能当三个独立证据来源。"
+    },
+    {
+      "sources": [
+        "F002",
+        "F093",
+        "F057"
+      ],
+      "basis": "同一99页Tutorial体系；F002为2025干净文本版，F093带注释，F057旧版。"
+    },
+    {
+      "sources": [
+        "F083",
+        "F089",
+        "F050",
+        "F051"
+      ],
+      "basis": "卷面2022-05-06同场补考与答案，不重复计数。F083与F089非二进制重复但题目一致。"
+    },
+    {
+      "sources": [
+        "F084",
+        "F052"
+      ],
+      "basis": "2021-12-10答案的标注/非标注副本。"
+    },
+    {
+      "sources": [
+        "F090",
+        "F091",
+        "F092",
+        "F074",
+        "F075",
+        "F076",
+        "F077",
+        "F078",
+        "F079",
+        "F080",
+        "F094",
+        "F095",
+        "F096",
+        "F097",
+        "F098",
+        "F099",
+        "F100",
+        "F101"
+      ],
+      "basis": "合订、扫描、分日文件之间存在内容重叠；仅当复习索引，不增加独立证据计数。"
+    }
+  ],
+  "sampledSources": [
+    {
+      "id": "F003",
+      "pagesRead": [
+        1
+      ],
+      "description": "四栏手写综合速查表：布尔空间、QM、ROBDD、启发式、共享逻辑、多级与分解",
+      "modules": [
+        "m02",
+        "m03",
+        "m04",
+        "m05",
+        "m06"
+      ],
+      "reading": "整页上、下区域放大抽查；未逐字符转写所有公式。"
+    },
+    {
+      "id": "F004",
+      "pagesRead": [
+        1
+      ],
+      "description": "四栏手写速查表：分解编码、FSM、事件仿真、VHDL、故障表、布尔差分、D算法",
+      "modules": [
+        "m05",
+        "m07",
+        "m08",
+        "m09",
+        "m10",
+        "m11",
+        "m12"
+      ],
+      "reading": "整页上、下区域放大抽查；未把手写结论当权威依据。"
+    },
+    {
+      "id": "F090",
+      "pagesRead": [
+        1,
+        17,
+        33
+      ],
+      "description": "33页四拼合订：讲义节选、2025课堂笔记与习题解",
+      "modules": [
+        "m02",
+        "m04",
+        "m07",
+        "m08",
+        "m10",
+        "m11"
+      ],
+      "reading": "抽查首/中/末三页，文本可提取但多栏重叠；未通读33页所有子页。"
+    },
+    {
+      "id": "F091",
+      "pagesRead": [
+        1,
+        8,
+        15
+      ],
+      "description": "15页四拼2025课堂手写笔记：布尔基础至全局蕴含、scan",
+      "modules": [
+        "m02",
+        "m05",
+        "m11",
+        "m13"
+      ],
+      "reading": "抽查首/中/末三页，手写内容不能依赖文本提取。"
+    },
+    {
+      "id": "F092",
+      "pagesRead": [
+        1,
+        6,
+        11
+      ],
+      "description": "11页四拼习题解：MUX/布尔、FSM、SR latch与事件表",
+      "modules": [
+        "m02",
+        "m07",
+        "m08"
+      ],
+      "reading": "抽查首/中/末三页；与分日习题资料存在内容重叠。"
+    },
+    {
+      "id": "F074",
+      "pagesRead": [
+        1,
+        6,
+        11
+      ],
+      "description": "2025-11-03：布尔模型、K-map/cube graph、Quine",
+      "modules": [
+        "m02",
+        "m03"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F075",
+      "pagesRead": [
+        1,
+        7,
+        13
+      ],
+      "description": "2025-11-04：implicant/cover、配置图、恒真判定",
+      "modules": [
+        "m03",
+        "m04"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F076",
+      "pagesRead": [
+        1,
+        5,
+        9
+      ],
+      "description": "2025-11-05：多输出共享、多级因式分解、函数分解",
+      "modules": [
+        "m05"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F077",
+      "pagesRead": [
+        1,
+        3,
+        5
+      ],
+      "description": "2025-11-06：FSM、状态等价、编码与逻辑实现",
+      "modules": [
+        "m07"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F078",
+      "pagesRead": [
+        1,
+        5,
+        8
+      ],
+      "description": "2025-11-07：故障激活/观测、布尔差分运算",
+      "modules": [
+        "m10",
+        "m11"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F079",
+      "pagesRead": [
+        1,
+        6,
+        10
+      ],
+      "description": "2025-11-10：差分规则、局部可观测性、故障树",
+      "modules": [
+        "m11",
+        "m12"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F080",
+      "pagesRead": [
+        1,
+        3,
+        4
+      ],
+      "description": "2025-11-12：全局蕴含、时序测试、scan",
+      "modules": [
+        "m11",
+        "m13"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F096",
+      "pagesRead": [
+        1,
+        4,
+        6
+      ],
+      "description": "Tutorial41125：MUX、布尔表示与cube graph、QM覆盖",
+      "modules": [
+        "m02",
+        "m03"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F097",
+      "pagesRead": [
+        1,
+        4,
+        7
+      ],
+      "description": "Tutorial51125：resolution、启发式与ESPRESSO概念",
+      "modules": [
+        "m03",
+        "m04"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F098",
+      "pagesRead": [
+        1,
+        4,
+        7
+      ],
+      "description": "Tutorial61125：共同implicant、LUT分解、shared ROBDD",
+      "modules": [
+        "m05",
+        "m06"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F099",
+      "pagesRead": [
+        1,
+        3,
+        5
+      ],
+      "description": "Tutorial71125：FSM最小化、SR latch和三值NAND",
+      "modules": [
+        "m07",
+        "m08"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F094",
+      "pagesRead": [
+        1,
+        4,
+        6
+      ],
+      "description": "Tutorial101125：故障覆盖表与布尔差分",
+      "modules": [
+        "m10",
+        "m11"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F095",
+      "pagesRead": [
+        1,
+        6,
+        10
+      ],
+      "description": "Tutorial111125：故障仿真、恒真/ROBDD和综合练习",
+      "modules": [
+        "m06",
+        "m08",
+        "m11",
+        "m12"
+      ],
+      "reading": "图像抽查"
+    },
+    {
+      "id": "F100",
+      "pagesRead": [
+        1,
+        11,
+        21
+      ],
+      "description": "Week1扫描笔记：MUX、ROBDD、三值逻辑",
+      "modules": [
+        "m02",
+        "m06",
+        "m08"
+      ],
+      "reading": "首/中/末图像抽查，正文无可提取文字。"
+    },
+    {
+      "id": "F101",
+      "pagesRead": [
+        1,
+        9,
+        17
+      ],
+      "description": "Week2扫描笔记：故障覆盖、D算法、综合解题",
+      "modules": [
+        "m08",
+        "m10",
+        "m11",
+        "m12"
+      ],
+      "reading": "首/中/末图像抽查，正文无可提取文字。"
+    },
+    {
+      "id": "F085",
+      "pagesRead": [
+        1,
+        4,
+        6
+      ],
+      "description": "标DMA22的手写答案实际标题Exam2023，与F055对应",
+      "modules": [
+        "m02",
+        "m03",
+        "m07",
+        "m08",
+        "m10",
+        "m11"
+      ],
+      "reading": "首/中/末图像核对题型、年份、指定路径D算法。答案带手写注释，不自动视为无误。"
+    }
+  ],
+  "examReading": {
+    "sources": [
+      "F086",
+      "F087",
+      "F088",
+      "F089",
+      "F055"
+    ],
+    "range": "全部文字页核对题号、分数、标题和封面日期；仅将题型与分数用于本索引，不依据抽取文字重建反相符号或电路。",
+    "independentExams": 5,
+    "note": "F089直接含答案。F055为12页、2023-06-20；F085为6页手写解。"
+  },
+  "versionPolicy": "课程主线以2025-10-31 Lecture Notes/Tutorial Notes为准；旧考试仅提供练习结构，旧讲义与手写资料只作补充。来源注明PDF页和印刷页，两者不要混淆。",
+  "limits": [
+    "未声称逐页通读全部101个文件；2025正式讲义/习题和5场近年卷为主，手写/合订文件有明确抽样范围。",
+    "讲义公式中的反相横线、上下标与门图在文本提取时可能丢失，关键解法需以原页图形及真值表复核。",
+    "未取得本次补考正式通知，所以不能确认今年题型权重、允许资料、及格线或考试确切日期。",
+    "所有原始课程PDF保持本地，仅发布原创中文讲解、题型索引与来源说明；公开站点不镜像原卷、课程资料或个人批注。",
+    "外部技术来源提供机制和实现边界；不能用较新的语言标准参数覆盖课程使用的语义约定。"
+  ]
+}

@@ -1,0 +1,6 @@
+[
+ {"id":"TUM-COURSE","title":"TUM EDA — Design Methodology and Automation 官方课程页","url":"https://www.ce.cit.tum.de/en/eda/lehrveranstaltungen/tum-asia/design-methodology-and-automation/","kind":"官方课程范围","version":"访问时公开页","date":"未标固定更新日","accessed":"2026-11-08","reading":"Contents、Additional Material及Laboratory入口；用于确认课程名称和综合/仿真/VHDL/测试范围。","limits":"网页不是本次补考通知，不据此推断考试日期、允许资料或押题。"},
+ {"id":"ABC-DOC","title":"ABC: A System for Sequential Synthesis and Verification","url":"https://people.eecs.berkeley.edu/~alanmi/abc/abc.htm","kind":"作者工具文档","version":"公开项目说明快照","date":"页面未标统一版本","accessed":"2026-11-08","reading":"Introduction、Highlights中的AIG、综合与验证协同描述。","limits":"只作机制与工程入口；不引用页面中依赖旧机器的运行时间作为本站预测。"},
+ {"id":"ABC-CODE","title":"berkeley-abc/abc 作者代码","url":"https://github.com/berkeley-abc/abc","kind":"作者代码与实验入口","version":"master入口；未固定提交做性能复现","date":"持续维护","accessed":"2026-11-08","reading":"README、代码目录和test目录入口；可作为课程之后的深入实现阅读。","limits":"未在本任务中编译执行ABC，不宣称完成该工具实验或得到性能结论。"},
+ {"id":"REFERENCE-SITE","title":"memory-architecture-lab 参考站与源码","url":"https://github.com/andyzr-coder/memory-architecture-lab","kind":"用户指定的结构参考","version":"codex/source 分支访问时快照","date":"README资料截止2026-10-30","accessed":"2026-11-08","reading":"README、dist/index.html、app.js导航与本地记录结构、知识树与下载流程。","limits":"复用静态站、hash章节路由、课程数据分离与离线下载的结构思路；DMA内容与算法单独重建，原站保持原状。"}
+]

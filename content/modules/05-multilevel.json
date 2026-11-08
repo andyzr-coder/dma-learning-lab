@@ -1,0 +1,190 @@
+{
+  "id": "m05",
+  "number": 5,
+  "title": "多级逻辑与函数分解",
+  "subtitle": "从提取公共表达式到压缩 bound variables 的信息",
+  "category": "逻辑综合",
+  "priority": "must",
+  "minutes": 120,
+  "prerequisites": [
+    "m02",
+    "m03"
+  ],
+  "related": [
+    "m04",
+    "m06",
+    "m07"
+  ],
+  "keyQuestion": "为什么两个 LUT 中间的线数由不同余函数的数量决定，而不是由原来的 minterm 数决定？",
+  "objectives": [
+    "画 Boolean network 并识别 fanin/fanout/reconvergence",
+    "用等价类构造 h 与 g，使 f(x,y)=g(h(x),y)",
+    "计算最少编码位和有利分解条件",
+    "区分逻辑共享的 literal 节省与实际时序成本"
+  ],
+  "sourceRefs": [
+    {
+      "id": "L25",
+      "locator": "2025-10-31；I.5，印刷 pp.37–43 / PDF pp.41–47"
+    },
+    {
+      "id": "T25",
+      "locator": "Tutorial 4 P4，印刷 p.40 / PDF p.42；解答 PDF p.52"
+    },
+    {
+      "id": "F089",
+      "locator": "内页 DMA 2022（文件名21_retake_exam）；Problem 1d/1f，PDF pp.3–4"
+    },
+    {
+      "id": "MULTILEVEL90",
+      "locator": "1990-02；§IV.D，印刷p.272 / PDF p.9，kernel/co-kernel定义与Table 1；深入选学"
+    }
+  ],
+  "sections": [
+    {
+      "id": "network",
+      "title": "两级最优并不是所有电路结构里的最优",
+      "body": "SOP 的两级结构是“若干 AND 后接 OR”，它的好处是表示和覆盖关系清楚。多级逻辑允许中间子函数被后级重复使用。一个组合 Boolean network 是有向无环图：输入节点、内部函数节点、输出节点，边表示信号依赖。fanin 是直接前驱，transitive fanin 包含所有祖先；fanout 是输出被多少后继使用；reconvergence 是分叉的信号又在后面汇合。\n\n例：$y=ab+ac+db+dc=(a+d)(b+c)$。展开 SOP 有 8 次输入 literal 出现，因式表达有 4 次。若库允许 OR、AND，每项的实现门和层数都要根据目标结构重数，而不是简单以“字符串变短”判断速度。共享中间信号 $t=b+c$ 能减少重复逻辑，但驱动多个目的地会增加负载。拓扑图的边是功能依赖，不自带固定延迟。\n\n来源 L25 PDF pp.41–42 将多级综合目标表述为更少门/literal、较好的 fanin/fanout。它没有保证每一次提因子都降低关键路径。将软件的公共子表达式消除类比到这里很直观，边界是软件常按指令顺序复用计算，而组合电路各级同时响应变化，共享的传播延迟与物理扇出必须另外评估。"
+    },
+    {
+      "id": "decomposition",
+      "title": "函数分解：只向后级传递真正需要区分的信息",
+      "body": "把输入分成 bound variables $x$ 与 free variables $y$，希望写成 $f(x,y)=g(h(x),y)$。h 只能看 x，输出 z；g 看 z 与原来的 y。对每个固定 x，f 变成关于 y 的余函数 $f_x(y)$。若两个 x 值产生完全相同的余函数，它们对后级来说不可区分，可以用同一个 z 编码；若余函数不同，就绝不能共用编码，否则 g 无法还原差别。\n\n设不同余函数数量为 $\\mu$，至少需要 $r=\\lceil\\log_2\\mu\\rceil$ 个中间比特，因 r 比特最多编码 $2^r$ 种情形。这是对该固定分区、完全指定函数的最少信息宽度。要实现课程所说的“有利分解”，还要求 $r<|x|$，即 $\\mu\\le2^{|x|-1}$。能够写一个 h 不表示必然减少逻辑：h=x 总是可以，却没有压缩。\n\n这很像对后续处理足够的“摘要”：两份输入只要对所有后续 y 都产生同样反应，就能共用摘要。但摘要必须对**所有** y 保真，而不是对当前采样的 y 看起来相同。构造分解表时把每列视为一整个向量，不能只比较某一行。来源：L25 PDF pp.43–47。"
+    },
+    {
+      "id": "worked",
+      "title": "完整示范：3 位 bound 输入压成 2 位",
+      "body": "原创例子：$x=(a,b,c)$、自由变量为 d，定义 $f=ab+ac+bc+d(a+b+c)$。固定 abc 后，只剩 d 的函数：000 对应常量 0；001、010、100 对应 d；011、101、110、111 对应常量 1。按 d=0、1 写向量分别是 (0,0)、(0,1)、(1,1)，因此 $\\mu=3$，最少 $r=2$ 位，满足 $2<3$。\n\n选择编码如下：余函数 0 用 z1z0=00，余函数 d 用 01，余函数 1 用 11。于是可以构造：\n\n$$z_1=h_1(a,b,c)=ab+ac+bc,\\qquad z_0=h_0(a,b,c)=a+b+c.$$\n\n后级 $g(z_1,z_0,d)=z_1+z_0d$。检查三类：00 时恒 0；01 时等于 d；11 时恒 1。编码 10 不会由 h 产生，所以 g 在这一内部码上可按 don’t-care 处理；本例 g(10,d)=1，是一种合法选择。若测试或系统接口允许外部强制 z=10，它是否仍可不关心必须重新看规范，不能把内部不可达默认变成所有模式下不可达。\n\n画图时先画 a,b,c 进入 h1/h0，输出两根线 z1,z0，再让 z 与 d 一起进入 g。验证不要只画箭头：枚举 abc 的 8 值，并对 d=0/1 共 16 个输入检查 $g(h(x),d)=f(x,d)$。一共 3 种余函数是证据，2 位是信息论下界，所给 h/g 是达到下界的构造。这三个结论一起才算完整答案。"
+    },
+    {
+      "id": "encoding",
+      "title": "编码选择、LUT 容量与 BDD 切割的联系",
+      "body": "给等价类分配不同编码，不改变 $\\mu$，但会改变 h 的表达式和 g 的表达式。正文编码让 z0 等于 OR、z1 等于 majority；若把常量 1 类改为 10，h/g 可能更复杂或更简单，要实际化简才知道。不同余函数必须有不同码；相同余函数允许分配多个码，只是通常不会减少最少位数，有时可让 h 更便宜。L25 PDF p.46 展示了这种编码取舍。\n\n若目标是单输出 k-LUT，一块 LUT 能实现不超过 k 个输入的任意函数，但多输出 h 的每一位通常需要独立 LUT（除非器件明确支持特殊双输出结构）。本例 h1、h0 各需一个 3 输入函数，g 也是 3 输入函数，因此按普通单输出 3-LUT 模型需三块 LUT，不能把“h 画成一个盒子”误算成一块 LUT。原函数有四个变量，不能直接放进一个普通 3-LUT。\n\n若 BDD 的变量顺序先 x 后 y，在 x 层后切开，每种可达的剩余子函数对应一个等价类。统计时要包括越过某些变量的边和直接到达的常量终端；只数某一横排画了几个圆圈可能漏掉余函数。BDD 提供分区探索方法，但选择能同时优化线宽、LUT 数与延迟的分区仍需成本评估。"
+    },
+    {
+      "id": "kernel",
+      "title": "深入选学：代数除法、kernel 与 co-kernel",
+      "body": "本节帮助连接真实多级综合；十天主线先掌握前面功能分解，不要求把 kernel 枚举当作当前讲义新增必考内容。代数除法试图将一个 SOP 表示写成 $f=pq+r$，在项集合和 literal 的形式结构上寻找可提取因子；它比允许全部布尔恒等变换的布尔分解限制更强。\n\n原创例：$f=ab+ac+db+dc+e$。以 cube a 作除数，能被 a 整除的项给商 $b+c$，余项是 $db+dc+e$。商 $b+c$ 没有共同的非平凡 cube 因子，称为 cube-free，因此是一个 kernel；a 是得到它的 co-kernel。同一个 kernel 也能由 co-kernel d 得到。将这两个共同商合并，可写 $f=(a+d)(b+c)+e$。\n\nkernel 是“用单个 cube 作代数除法得到的 cube-free 商”，co-kernel 是对应的 cube 除数；不要与 cofactor 混淆。cofactor 固定变量值，会把含相反 literal 的项消为 0，并不等于取某些项的除法商。比如 $f=ab+\\bar ac$，对 a=1 的 cofactor 为 b；但这只是一个巧合式相似，不是两种运算在所有表达式上相同。\n\n原始扩展阅读：[Brayton 等，Multilevel Logic Synthesis](https://people.eecs.berkeley.edu/~alanmi/publications/other/multi_level.pdf)，Proceedings of the IEEE，1990，§IV.D（印刷 p.272 / PDF p.9）的 kernel 定义与代数方法；2026-11-08 核对该部分。该引用用于方法定义，不把论文历史实验数字当成本网站的性能实测。本文例题是自拟，计数与推导可独立核验。"
+    },
+    {
+      "id": "tradeoff",
+      "title": "公平比较与失败反例",
+      "body": "案例问题是压缩前级传给后级的信息。基线直接传全部 x；机制按相同余函数分组；证据是完整分解表；成本包括 h 的逻辑、z 线数、g 的 fanin 和额外级数；适用条件是 $\\mu$ 足够小且新结构满足目标库约束。反例：若每个 x 产生不同余函数，$\\mu=2^{|x|}$，最少 r=|x|，没有输入宽度收益。即使 r 小，复杂 h 也可能让最长路径变差。\n\n比较面积与延迟必须固定同一库、同一输入到达时间、同一输出负载和同一时序约束。站内用 literal 或理想 LUT 数的估算只回答该抽象模型的问题。能力验收是拿到一个分解表，能找等价列、算 r、编码、画 h/g、填 LUT 表并用原输入复算。若只会说“用 BDD 可以分解”，还无法完成课程的构造题。"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "m05-q1",
+      "type": "numeric",
+      "stage": "补全",
+      "prompt": "4 个 bound 变量产生 5 种不同余函数，最少需几位中间编码？",
+      "answer": "ceil(log2 5)=3 位，因为 2 位只能区分 4 类，3 位能区分 8 类；3<4，满足课程宽度压缩条件。",
+      "rubric": [
+        "编码位数正确",
+        "容量理由",
+        "有利分解判断"
+      ],
+      "maxScore": 3,
+      "expected": 3,
+      "tolerance": 1e-09,
+      "unit": "位"
+    },
+    {
+      "id": "m05-q2",
+      "type": "text",
+      "stage": "独立",
+      "prompt": "正文例子 abc=010、d=1 时，求 z1,z0 与输出，并用原式复核。",
+      "answer": "只有一个 bound 输入为 1，所以 z1=0,z0=1；g=0+1×1=1。原式 ab=ac=bc=0，d(a+b+c)=1，输出也为 1。",
+      "rubric": [
+        "中间码正确",
+        "后级输出正确",
+        "原式复算"
+      ],
+      "maxScore": 3
+    },
+    {
+      "id": "m05-q3",
+      "type": "text",
+      "stage": "独立",
+      "prompt": "为什么不能把余函数 d 和常量 1 编成相同的 z？",
+      "answer": "在 d=0 时两者输出分别为 0 与 1；相同 z 且相同 d 会要求 g 同时输出两个值，矛盾。",
+      "rubric": [
+        "给 d=0 反例",
+        "说明 g 确定性矛盾",
+        "全体 y 的等价要求"
+      ],
+      "maxScore": 3
+    },
+    {
+      "id": "m05-q4",
+      "type": "numeric",
+      "stage": "迁移",
+      "prompt": "某人将正文 h=(h1,h0) 画成一个盒子，宣称总共只需两块单输出 3-LUT。找出资源计算问题。",
+      "answer": "h 有两个独立输出，在普通单输出 LUT 模型中 h1、h0 各需一块；g 再一块，总共 3 块。只有目标器件明确提供可用的双输出结构时才能按其规则重新计数。",
+      "rubric": [
+        "指出 h 的两个输出",
+        "三块结论",
+        "模型依赖边界"
+      ],
+      "maxScore": 3,
+      "expected": 3,
+      "tolerance": 1e-09,
+      "unit": "块"
+    },
+    {
+      "id": "m05-q5",
+      "type": "text",
+      "stage": "独立",
+      "prompt": "对 f=ab+ac+db+dc+e，写一组 kernel/co-kernel 和因式分解，并说明它不是 cofactor。",
+      "answer": "kernel 可为 b+c，co-kernel 可为 a 或 d；f=(a+d)(b+c)+e。kernel 来自对特定 cube 的代数除法商；cofactor 是将变量固定后的函数，需处理所有项。",
+      "rubric": [
+        "kernel 正确",
+        "co-kernel 正确",
+        "分解正确",
+        "与 cofactor 区分"
+      ],
+      "maxScore": 4
+    },
+    {
+      "id": "m05-q6",
+      "type": "text",
+      "stage": "迁移",
+      "prompt": "设计一个检验候选分解 h/g 是否正确的办法，并说明仅检查全部 z 编码为什么可能不够。",
+      "answer": "枚举全部原输入 x,y，比较 f(x,y) 与 g(h(x),y)。仅检查 z 会忽略 h 是否把每个 x 正确映射；而不可达 z 上的 g 值可能是允许的 DC，不应误判。",
+      "rubric": [
+        "原输入枚举",
+        "检查组合等式",
+        "包含 h 的正确性",
+        "处理不可达内部码"
+      ],
+      "maxScore": 4
+    }
+  ],
+  "glossary": [
+    {
+      "term": "绑定变量",
+      "en": "Bound variables",
+      "definition": "只通过前级 h 压缩后进入后级 g 的输入集合。"
+    },
+    {
+      "term": "自由变量",
+      "en": "Free variables",
+      "definition": "直接进入后级 g 的输入集合。"
+    },
+    {
+      "term": "余函数等价类",
+      "en": "Cofactor equivalence class",
+      "definition": "使剩余自由变量函数完全相同的一组 bound 输入。"
+    },
+    {
+      "term": "核",
+      "en": "Kernel",
+      "definition": "由 SOP 对 cube 作代数除法获得的 cube-free 商。"
+    },
+    {
+      "term": "重汇合",
+      "en": "Reconvergence",
+      "definition": "同一信号分叉后又在某个后继逻辑中汇合。"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+import fs from 'node:fs';import path from 'node:path';import {marked} from 'marked';import katex from 'katex';
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,''));const optional=(p,d)=>fs.existsSync(p)?read(p):d;
+const out='dist';fs.mkdirSync(out,{recursive:true});fs.mkdirSync('public/downloads',{recursive:true});
+const mathErrors=[];
+function markdown(text=''){
+  const math=[];const token=(tex,displayMode)=>{let html;try{html=katex.renderToString(tex.trim(),{displayMode,throwOnError:true,trust:false,strict:'ignore'});}catch(e){mathErrors.push({tex,error:e.message});html=`<code>${tex}</code>`;}math.push(html);return `MATHPLACEHOLDER${math.length-1}END`;};
+  let safe=text.replace(/\$\$([\s\S]*?)\$\$/g,(_,s)=>token(s,true)).replace(/(?<!\\)\$([^$\n]+?)\$/g,(_,s)=>token(s,false));
+  return marked.parse(safe).replace(/MATHPLACEHOLDER(\d+)END/g,(_,i)=>math[i]);
+}
+function compile(obj){if(Array.isArray(obj))return obj.map(compile);if(obj&&typeof obj==='object'){let r={};for(const[k,v]of Object.entries(obj)){r[k]=compile(v);if(['body','prompt','answer','strategy'].includes(k)&&typeof v==='string')r[k+'Html']=markdown(v);}return r;}return obj;}
+const modules=fs.readdirSync('content/modules').filter(p=>p.endsWith('.json')).map(p=>read('content/modules/'+p)).sort((a,b)=>a.number-b.number);
+const external=fs.readdirSync('content').filter(p=>p.startsWith('external-')).flatMap(p=>{const d=read('content/'+p);return Array.isArray(d)?d:(d.sources||[]);});
+const D={version:1,date:'2026-11-08',title:'DMA 补考研习室',modules,labs:read('content/labs.json'),plan:optional('content/plan.json',{days:[],strategy:''}),exams:optional('content/exam-map.json',{exams:[],cautions:[]}),audit:optional('content/source-audit.json',{}),examGuide:optional('content/exam-guide.json',{sections:[]}),cases:optional('content/cases.json',[]),sources:[...optional('content/source-registry.json',[]),...external]};
+const compiled=compile(D);fs.writeFileSync(out+'/content.mjs','export default '+JSON.stringify(compiled)+';\n');
+fs.writeFileSync('public/downloads/source-index.json',JSON.stringify({date:D.date,sources:D.sources,audit:D.audit},null,2));
+for(const f of fs.readdirSync('src'))fs.copyFileSync('src/'+f,out+'/'+f);
+fs.mkdirSync(out+'/vendor',{recursive:true});fs.copyFileSync('node_modules/katex/dist/katex.min.css',out+'/vendor/katex.min.css');fs.cpSync('node_modules/katex/dist/fonts',out+'/vendor/fonts',{recursive:true});
+fs.writeFileSync('public/downloads/course-data.json',JSON.stringify(D,null,2));
+const header=`---\ntitle: "DMA 设计方法学与自动化：10 天补考研习手册"\nauthor: "基于 NM6004 2025 课程资料的中文学习版"\ndate: "2026-11-08"\nlang: zh-CN\nCJKmainfont: "Microsoft YaHei"\nmainfont: "TeX Gyre Pagella"\nsansfont: "TeX Gyre Heros"\nmonofont: "Consolas"\nfontsize: 10pt\ngeometry: margin=2.1cm\ncolorlinks: true\nlinkcolor: DarkGreen\ntitlepage: true\ntitlepage-rule-color: "155C4D"\ntoc-own-page: true\nnumber-sections: true\n---\n\n`;
+let md='# 如何使用这份手册\n\n本手册主题是 Design Methodology and Automation（设计方法学与自动化），不是直接存储器访问。目标是建立可在纸上独立复现的推理链：定义问题、选择表示、执行算法、检查结果、解释代价。先做示范，再补全，再独立作答。网站答案默认折叠；纸质版答案集中于附录，练习时先遮住。\n\n证据顺序：2025-10-31 讲义与习题为课程主线；近年卷只证明历史考查；外部规范、论文、作者代码用于交叉核验。2026-11-08 为本版资料核验日，学校本次补考安排与允许携带资料尚未提供。\n\n## 时间与取舍\n\n'+D.plan.strategy+'\n\n';
+for(const a of D.plan.adjustments||[])md+=`- **${a.condition}**：${a.action}\n`;
+md+='\n## 关键问题—先修知识—模块—练习/实验—来源\n\n';
+for(const m of modules)md+=`### ${m.number}. ${m.title}\n\n关键问题：${m.keyQuestion}\n\n先修：${m.prerequisites.join('、')||'无需额外先修'}。核心目标：${m.objectives.join('；')}。\n\n活动：${m.exercises.map(q=>q.stage).filter((x,i,a)=>a.indexOf(x)===i).join(' → ')}；${D.labs.filter(l=>l.module===m.id).map(l=>l.title).join('、')||'章节手算与画图'}。来源：${m.sourceRefs.map(s=>`${s.id} ${s.locator}`).join('；')}。\n\n`;
+md+='\n# 10 天路线与能力证据\n\n';for(const day of D.plan.days)md+=`## Day ${day.day} · ${day.title}\n\n净学习约${day.minutes}分钟；模块 ${day.modules.join('、')}。\n\n${day.tasks.map(x=>'- '+x).join('\n')}\n\n**当天必须留下的能力证据**\n\n${day.evidence.map(x=>'- '+x).join('\n')}\n\n**间隔复习**：${day.review.join('；')}\n\n`;
+for(const m of modules){md+=`\n# ${String(m.number).padStart(2,'0')} ${m.title}\n\n${m.subtitle}\n\n**关键问题**：${m.keyQuestion}\n\n**学习目标**\n\n${m.objectives.map(s=>'- '+s).join('\n')}\n\n**先修**：${m.prerequisites.join('、')||'无'}；**横向联系**：${m.related.join('、')}。\n\n`;
+  for(const s of m.sections)md+=`## ${s.title}\n\n${s.body}\n\n`;
+  md+='## 练习：先作答，再查附录\n\n';for(const q of m.exercises)md+=`### ${q.id} · ${q.stage} · ${q.maxScore} 分\n\n${q.prompt}\n\n`;
+  md+='## 本章来源\n\n'+m.sourceRefs.map(s=>`- ${s.id}：${s.locator}`).join('\n')+'\n\n';}
+md+='# 交互实验的模型、手算与边界\n\n';for(const l of D.labs)md+=`## ${l.title}\n\n**先预测**：${l.predict}\n\n**模型**：${l.model}\n\n**参数与假设**：${l.assumptions}\n\n**手算校验**：${l.hand}\n\n**边界校验**：${l.boundary}\n\n**迁移问题**：${l.variation}\n\n**限制**：${l.limits}\n\n来源：${l.sources.join('、')}。\n\n`;
+if(D.cases.length){md+='# 机制、成本与方案比较\n\n';for(const c of D.cases)md+=`## ${c.title}\n\n${c.body}\n\n`;}
+md+='# 历年卷地图与模考\n\n';for(const s of D.examGuide.sections||[])md+=`## ${s.title}\n\n${s.body}\n\n`;
+for(const e of D.exams.exams){md+=`## ${e.title}\n\n来源 ${e.sourceId}；卷面日期 ${e.date}；${e.duration} 分钟 / ${e.totalPoints} 分；${e.containsAnswers?'含答案，不宜用于未见题盲测':'可用于限时作答，先隔离答案'}。\n\n`;for(const q of e.questions)md+=`- ${q.number}（${q.points}分）：${q.title}。对应 ${q.modules.join('、')}；${q.locator}。\n`;md+='\n';}
+if(D.examGuide.mock){const mock=D.examGuide.mock;md+=`## ${mock.title}\n\n${mock.duration}分钟，${mock.totalPoints}分。${mock.instructions}\n\n`;for(const q of mock.questions)md+=`### ${q.id} · ${q.title} · ${q.points}分\n\n${q.prompt}\n\n`;}
+md+='# 附录 A：练习参考答案与自评量表\n\n数值题仅核对答案值，不自动判断推导。文字题、图形题与设计题必须按评分点自评；看到答案后做对，应另找变式，不能算首次独立能力证据。\n\n';
+for(const m of modules){md+=`## ${m.title}\n\n`;for(const q of m.exercises)md+=`### ${q.id} · ${q.maxScore}分\n\n${q.answer}\n\n评分点：\n\n${q.rubric.map(x=>'- '+(typeof x==='string'?x:JSON.stringify(x))).join('\n')}\n\n`;}
+if(D.examGuide.mock){md+='## 原创模拟卷参考答案\n\n';for(const q of D.examGuide.mock.questions)md+=`### ${q.id} · ${q.title}\n\n${q.answer}\n\n${q.rubric.map(x=>'- '+(typeof x==='string'?x:JSON.stringify(x))).join('\n')}\n\n`;}
+md+='# 附录 B：术语中英对照\n\n';for(const m of modules)for(const g of m.glossary||[])md+=`- **${g.term} / ${g.en}**：${g.definition}\n`;
+const cited=new Set(['L25','T25',...D.modules.flatMap(m=>m.sourceRefs.map(s=>s.id)),...D.labs.flatMap(l=>l.sources),...D.exams.exams.flatMap(e=>[e.sourceId,e.answerSource]),...external.map(s=>s.id)]);
+md+='\n# 附录 C：来源与阅读边界\n\n这里只收录课程引用的来源。完整101份原始文件的索引、哈希、抽查记录请见网站下载 source-index.json。原始PDF不附入公开分发包。\n\n';for(const s of D.sources.filter(s=>cited.has(s.id)))md+=`## ${s.id} · ${s.title||s.name}\n\n类型：${s.kind||'用户提供的课程材料'}；版本：${s.version||'按文件标识'}；发布日期：${s.date||'未明示'}；访问/核验日：${s.accessed||D.date}。\n\n阅读范围：${s.reading||'按章节来源定位，未声明全篇精读'}。\n\n${s.limits||''}\n\n${s.url?'原始来源：'+s.url+'\n\n':''}`;
+md+='\n## 本地资料审计\n\n'+`共${D.audit.inventory?.files||0}份真实PDF，${D.audit.inventory?.pages||0}个PDF页（含重复与合订）。PDF页码使用阅读器页序，不总等于印刷页。\n\n`;
+for(const x of D.audit.contentOverlap||[])md+=`- **${x.sources.join(' / ')}**：${x.basis}\n`;
+md+='\n### 扫描与合订本阅读范围\n\n';for(const x of D.audit.sampledSources||[])md+=`- **${x.id}**，PDF页 ${x.pagesRead.join('、')}：${x.description}。${x.reading}\n`;
+md+='\n';for(const x of D.audit.limits||[])md+=`- ${typeof x==='string'?x:JSON.stringify(x)}\n`;
+fs.writeFileSync('public/downloads/dma-handbook.md',header+md);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let html=`<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DMA 中文离线学习手册</title><style>body{max-width:900px;margin:auto;padding:30px;font:16px/1.9 'Segoe UI','Microsoft YaHei',sans-serif;color:#182d2c}h1,h2,h3{line-height:1.4}h1{margin-top:55px;border-top:3px solid #155c4d;padding-top:24px}h2{margin-top:35px}a{color:#155c4d}pre{background:#eef3ee;padding:15px;overflow:auto;font-size:13px}details{border:1px solid #dce4dc;padding:16px;margin:20px 0;border-radius:8px}summary{cursor:pointer;color:#155c4d;font-weight:700}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:8px}blockquote{border-left:4px solid #155c4d;padding-left:20px}.katex-display{overflow:auto}@media print{body{font-size:10pt;padding:0}h1{break-before:page}details{break-inside:avoid}}</style>`;
+let katexCss=fs.readFileSync('node_modules/katex/dist/katex.min.css','utf8').replace(/url\((fonts\/[^)]+)\)/g,(_,p)=>`url(data:font/${path.extname(p).slice(1)};base64,${fs.readFileSync('node_modules/katex/dist/'+p).toString('base64')})`);html+='<style>'+katexCss+'</style><h1>DMA 设计方法学与自动化</h1><p>中文离线手册 · 2026-11-08 · 可搜索、打印，答案默认折叠。源文件、网站与PDF由同一份课程数据生成。</p><nav><ul>'+modules.map(m=>`<li><a href="#${m.id}">${esc(m.title)}</a></li>`).join('')+'<li><a href="#offline-labs">实验模型</a></li><li><a href="#offline-exam">模考与试卷地图</a></li><li><a href="#offline-sources">来源索引</a></li></ul></nav>';
+const introEnd=md.indexOf('\n# 01 ');html+=markdown(introEnd>=0?md.slice(0,introEnd):D.plan.strategy);
+for(const m of compiled.modules){html+=`<h1 id="${m.id}">${m.number}. ${esc(m.title)}</h1><p>${esc(m.subtitle)}</p>`+m.sections.map(s=>`<h2>${esc(s.title)}</h2>${s.bodyHtml}`).join('')+'<h2>独立练习</h2>';for(const q of m.exercises)html+=`<h3>${q.id} · ${q.stage}</h3>${q.promptHtml}<details><summary>参考答案与评分量表（${q.maxScore}分）</summary>${q.answerHtml}<ul>${q.rubric.map(r=>`<li>${esc(typeof r==='string'?r:JSON.stringify(r))}</li>`).join('')}</ul></details>`;}
+html+='<h1 id="offline-labs">实验模型与方案比较</h1>'+markdown(md.slice(md.indexOf('# 交互实验的模型'),md.indexOf('# 历年卷地图')))+'<h1 id="offline-exam">模考与试卷地图</h1>';
+html+=compiled.examGuide.sections.map(s=>`<h2>${esc(s.title)}</h2>${s.bodyHtml}`).join('');
+for(const e of D.exams.exams)html+=`<h2>${esc(e.title)}</h2><p>${e.duration}分钟 / ${e.totalPoints}分；${e.sourceId}；${e.containsAnswers?'含答案':''}</p><ul>${e.questions.map(q=>`<li>${q.number} / ${q.points}分 / ${esc(q.title)} / ${q.locator}</li>`).join('')}</ul>`;
+if(compiled.examGuide.mock){const mock=compiled.examGuide.mock;html+=`<h2>${esc(mock.title)}</h2><p>${mock.duration}分钟 / ${mock.totalPoints}分。${esc(Array.isArray(mock.instructions)?mock.instructions.join('；'):mock.instructions)}</p>`;for(const q of mock.questions)html+=`<h3>${q.id} · ${esc(q.title)} · ${q.points}分</h3>${q.promptHtml}<details><summary>参考答案与量表</summary>${q.answerHtml}<ul>${q.rubric.map(r=>`<li>${esc(typeof r==='string'?r:JSON.stringify(r))}</li>`).join('')}</ul></details>`;}
+html+='<h1 id="offline-sources">术语与来源</h1>'+markdown(md.slice(md.indexOf('# 附录 B')))+'<script>addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>{d.dataset.wasOpen=d.open;d.open=true}));addEventListener("afterprint",()=>document.querySelectorAll("details").forEach(d=>d.open=d.dataset.wasOpen==="true"));</script></html>';
+fs.writeFileSync('public/downloads/dma-handbook.html',html);fs.cpSync('public',out,{recursive:true});fs.writeFileSync(out+'/.nojekyll','');
+fs.mkdirSync('qa',{recursive:true});fs.writeFileSync('qa/math-errors.json',JSON.stringify(mathErrors,null,2));if(mathErrors.length)throw Error(`${mathErrors.length} math rendering errors; see qa/math-errors.json`);
+console.log(JSON.stringify({modules:modules.length,exercises:modules.reduce((n,m)=>n+m.exercises.length,0),labs:D.labs.length,sources:D.sources.length,htmlBytes:Buffer.byteLength(html),mathErrors:0}));

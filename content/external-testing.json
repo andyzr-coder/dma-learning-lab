@@ -1,0 +1,92 @@
+{
+  "sources": [
+    {
+      "id": "IEEE1076",
+      "title": "IEEE 1076-2019 — IEEE Standard for VHDL Language Reference Manual",
+      "url": "https://standards.ieee.org/ieee/1076/5179/",
+      "kind": "规范元数据",
+      "version": "IEEE 1076-2019",
+      "date": "2019-12-23",
+      "accessed": "2026-11-08",
+      "reading": "官方公开页面的标准范围、2019-09-05批准日期、2019-12-23发布日期、前序1076-2008与获取方式。",
+      "limits": "完整规范需要购买或订阅；未读取付费全文，不引用未经查阅的条款编号。"
+    },
+    {
+      "id": "GHDL-SIM",
+      "title": "GHDL Documentation — Simulation (runtime)",
+      "url": "https://ghdl.github.io/ghdl/using/Simulation.html",
+      "kind": "官方工具文档",
+      "version": "页面标识7.0.0-dev（访问时快照）",
+      "date": "未标固定发布日期",
+      "accessed": "2026-11-08",
+      "reading": "Simulation options中的--assert-level、--stop-time、--stop-delta、--disp-time；Export waveforms中的--wave与VCD说明。",
+      "limits": "工具运行选项属于GHDL实现接口，不能当成IEEE标准要求；未把开发文档默认值当成本机安装版本验证结果。"
+    },
+    {
+      "id": "GHDL-STD",
+      "title": "GHDL Documentation — Implementation of VHDL",
+      "url": "https://ghdl.github.io/ghdl/using/ImplementationOfVHDL.html",
+      "kind": "官方工具文档",
+      "version": "7.0.0-dev；VHDL标准模式87/93/00/02/08/19",
+      "date": "未标固定发布日期",
+      "accessed": "2026-11-08",
+      "reading": "VHDL standards小节：--std选择、版本兼容组以及2008/2019部分实现限制。",
+      "limits": "页面会更新；课程示例明确区分旧写法与2008特性，不声称GHDL完整实现所有2019特性。"
+    },
+    {
+      "id": "ROTH66",
+      "title": "J. Paul Roth — Diagnosis of Automata Failures: A Calculus and a Method",
+      "url": "https://doi.org/10.1147/rd.104.0278",
+      "kind": "原始论文（全文访问受限）",
+      "version": "IBM Journal of Research and Development 10(4), pp.278–291",
+      "date": "1966-07",
+      "accessed": "2026-11-08",
+      "reading": "核对论文题名、作者、年代与可索引摘要中的D-cube和D-algorithm来源；课程机制以L25/T25为主要证据。",
+      "limits": "DOI/IBM页面抓取不可用，Bitsavers原始扫描副本返回403；未读取全文，不引用性能数据或声称全文复现。"
+    },
+    {
+      "id": "GOEL80",
+      "title": "Prabhakar Goel — An Implicit Enumeration Algorithm to Generate Tests for Combinational Logic Circuits",
+      "url": "https://citeseerx.ist.psu.edu/document?doi=88578c7424876c6cd0c7bc9ffce9124ba6a6a9ad&repid=rep1&type=pdf",
+      "kind": "原始会议论文（索引可见，全文受限）",
+      "version": "FTCS-10, 1980, pp.145–151；与1981期刊版区分",
+      "date": "1980",
+      "accessed": "2026-11-08",
+      "reading": "检索可索引摘要与首页信息；PODEM名称、面向组合逻辑的隐式枚举思路。",
+      "limits": "PDF抓取403。1981 IEEE TC C-30(3) pp.215–222 DOI 10.1109/TC.1981.1675757也未读取全文；两版本参数与性能不混用。PODEM为选学。"
+    },
+    {
+      "id": "AGRAWAL-FAULTSIM",
+      "title": "Michael L. Bushnell / Vishwani D. Agrawal — VLSI Testing Course, Lecture 7: Fault Simulation",
+      "url": "https://www.eng.auburn.edu/~vagrawal/COURSE/lectures.html",
+      "kind": "作者课程资料",
+      "version": "作者课程目录列Lecture 7，20 slides；历史课程版本",
+      "date": "页面列2004–2006课程，单个讲义日期未核定",
+      "accessed": "2026-11-08",
+      "reading": "作者课程目录及Lecture 7故障仿真、Lecture 11 ATPG、Lecture 25 BIST的主题对应。本站四类方案仅作概念扩展，算例自行构造。",
+      "limits": "只核对公开课程目录，未把未读取的PPT细节当成证据；无性能数字引用。核心手算来源为L25/T25。"
+    },
+    {
+      "id": "OPENTITAN-LFSR",
+      "title": "OpenTitan — Primitive Component: LFSR",
+      "url": "https://opentitan.org/book/hw/ip/prim/doc/prim_lfsr.html",
+      "kind": "作者工程文档/实现",
+      "version": "master页面于访问日所见，非固定release",
+      "date": "未标固定发布日期",
+      "accessed": "2026-11-08",
+      "reading": "Parameters、Theory of Operations：GAL_XOR/FIB_XNOR，DefaultSeed，锁死保护，引用XAPP052的抽头表与声明验证范围。",
+      "limits": "本站未运行OpenTitan RTL，也未复现文档所述全部位宽验证；其锁死保护属于该实现，不能自动外推普通课堂LFSR。"
+    },
+    {
+      "id": "XAPP052",
+      "title": "Peter Alfke — Efficient Shift Registers, LFSR Counters, and Long Pseudo-Random Sequence Generators",
+      "url": "https://docs.amd.com/v/u/en-US/xapp052",
+      "kind": "厂商应用笔记",
+      "version": "XAPP052 version 1.1",
+      "date": "1996-07-07",
+      "accessed": "2026-11-08",
+      "reading": "官方版本元数据、摘要及Introduction：LFSR抽头/位编号约定、XNOR例与锁死处理说明。",
+      "limits": "历史XC4000系列实现材料；不引用现代器件性能，不直接套用其XNOR抽头到本站GF(2)余式递推。"
+    }
+  ]
+}
