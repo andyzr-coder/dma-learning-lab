@@ -1,0 +1,92 @@
+{
+  "reviewType": "只读 PDF 视觉验收",
+  "file": "public/downloads/dma-handbook.pdf",
+  "reviewedSha256": "532ee71f4dead7dccad3f0a6ccc665326bf5155f53240b0dd4657de3f20c1216",
+  "pageCount": 87,
+  "status": "pass",
+  "method": [
+    "PyMuPDF 将全部 87 页渲染为 8 张带 PDF 页码的缩略联系表，逐张视觉检查；封面不计作空白页。",
+    "以 1.8 倍缩放查看关键正文、公式、表格、代码、答案与来源页。",
+    "对所有文本 span 检查是否超出实际页面边界，辅助查找被裁切文字；自动边界扫描不能代替视觉检查。",
+    "仅检查版面与明显公式排版问题，不声称逐字校对全文或重新核验全部学科内容。"
+  ],
+  "visuallyInspected": {
+    "thumbnailPages": "1–87，全部页面",
+    "detailPages": [
+      1,
+      18,
+      19,
+      26,
+      27,
+      29,
+      30,
+      32,
+      33,
+      35,
+      36,
+      58,
+      76,
+      85
+    ],
+    "coverage": [
+      "封面",
+      "目录",
+      "覆盖范围",
+      "10 天路线",
+      "QM",
+      "BDD",
+      "FSM",
+      "事件仿真",
+      "VHDL 代码",
+      "模拟卷表格",
+      "答案",
+      "来源索引",
+      "本地资料审计"
+    ],
+    "finalRevisionDetailPages": [
+      1,
+      85,
+      86
+    ],
+    "finalRevisionThumbnailPages": "85–87"
+  },
+  "checks": {
+    "blankPages": "未见意外空白页；末页为审计内容的正常结束页。",
+    "headersAndFooters": "全部缩略图未见页脚与正文重叠；抽样细图页码、页眉和页脚完整。",
+    "tablesAndCode": "抽样 QM 合并列表、FSM 表、分解表与 VHDL 代码块未见裁切或错列。",
+    "formulas": "抽样补变量横线、下标、分式、集合、Shannon、Petrick、FSM 方程和中文相邻文本显示正常；未见黑方块。",
+    "replacementCharacterScan": 0,
+    "outOfPageSpanCount": 0,
+    "namedInternalLinks": 209,
+    "invalidNamedInternalDestinations": 0,
+    "externalLinks": 17,
+    "sourceUrlTargetCheck": "GOEL80 CiteSeer 超链接目标完整保留 query 参数；17 个外部链接为 PDF URI 注释。此检查不等于访问源站成功。"
+  },
+  "findings": [
+    {
+      "id": "pdf-url-overflow",
+      "severity": "medium",
+      "status": "resolved",
+      "page": 85,
+      "printedPage": 84,
+      "location": "21.27 GOEL80 的原始来源链接",
+      "description": "CiteSeer URL 在一行连续排版，越过正文右边距且末尾被页面裁切；文本 bbox 右缘为 595.579 pt，页面宽为 595.276 pt。",
+      "recommendation": "将长网址作为可断行的 URL 排版，或用简短可点击标签显示，并保持实际超链接目标完整。",
+      "resolution": "最终版本统一显示原文链接，可见标签未溢出，真实 URI 保留。"
+    },
+    {
+      "id": "pdf-cover-wrap",
+      "severity": "low",
+      "status": "resolved",
+      "page": 1,
+      "location": "封面标题",
+      "description": "标题在“研习”中间换行，第二行只有“习手册”；内容没有丢失，但视觉节奏较弱。",
+      "recommendation": "可选：将主题名与“10 天补考研习手册”安排为两个完整语义行。",
+      "resolution": "最终封面主标题与10天手册副标题分开排版，未发生词中换行。"
+    }
+  ],
+  "artifacts": "qa/pdf-review/（本地中间截图，不应作为课程资源发布）",
+  "limitations": "全页视觉缩略检查与核心细图针对上一版87页；最终版复查封面、来源页85–87和所有文本边界/内部链接，正文内容没有在此审查中逐字校对。仅保证本报告记录的SHA版本。",
+  "bytes": 1109537,
+  "modified": "2026-11-08T18:01:29.067176"
+}

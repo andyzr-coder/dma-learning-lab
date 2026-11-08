@@ -12,3 +12,8 @@ dist/
 tools/github_private.py
 tools/extract_sources.py
 tools/build-source-registry.py
+tools/write_synthesis.py
+tools/build_testing_content.py
+tools/audit-doc-source.py
+public/downloads/*.zip
+qa/pdf-review/

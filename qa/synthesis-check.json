@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "checkedDate": "2026-11-08",
+  "scope": "Authored synthesis examples m01–m07; not original exam OCR correctness",
+  "modules": 7,
+  "exercises": 42,
+  "checks": [
+    "QM six-PI example: exhaustive truth table, no two-row cover, exactly two three-row covers",
+    "Expand/reduce/remove examples: exhaustive 3-bit truth table; simultaneous-removal counterexample",
+    "Functional decomposition: all 16 original inputs agree",
+    "ROBDD MUX counts: 3 and 5 nonterminal nodes under stated variable orders, no complement edges",
+    "FSM original versus quotient: all sequences of length 1 through 10 agree",
+    "Encoded FSM: all legal state/input rows and unused-code recovery",
+    "JSON schema essentials, section identifiers, rubric point totals"
+  ],
+  "command": "python tools/check-synthesis.py"
+}

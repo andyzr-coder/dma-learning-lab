@@ -106,5 +106,6 @@ for file in sorted((root/'content'/'modules').glob('*.json')):
             for v in x: yield from strings(v)
     check(f'{d["id"]}: no escaped control characters',all(not any(ord(c)<32 and c not in '\n\r\t' for c in s) for s in strings(d)))
 result={'status':'passed','checks':len(checks),'scope':'Independent educational arithmetic, Boolean truth-table, signature/LFSR and content-integrity checks. Not an HDL or hardware simulation.','items':checks}
-(root/'research'/'testing-content-validation.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+(root/'qa').mkdir(exist_ok=True)
+(root/'qa'/'testing-content-validation.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'status':'passed','checks':len(checks)},ensure_ascii=False))
