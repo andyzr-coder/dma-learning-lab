@@ -1,4 +1,4 @@
-import * as M from './models.mjs';
+import * as M from './models.mjs?v=20261109-illustrated';
 const $=s=>document.querySelector(s),e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const field=(label,id,value,type='text',extra='')=>`<label class="field">${label}<input id="${id}" type="${type}" value="${e(value)}" ${extra}></label>`;
 const select=(label,id,options,value)=>`<label class="field">${label}<select id="${id}">${options.map(([v,s])=>`<option value="${v}" ${String(v)===String(value)?'selected':''}>${s}</option>`).join('')}</select></label>`;
