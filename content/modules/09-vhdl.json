@@ -66,7 +66,7 @@
     {
       "id": "testbench",
       "title": "自检比“波形看起来正确”更可靠",
-      "body": "先确定输入组合和预期结果，再写断言。对于零延迟组合mux，可以在testbench中依次施加全部$a,b,sel$组合，在模型规定的稳定窗口检查输出。若施加输入后立即assert，进程可能读到尚未更新的旧输出；可等待足够的delta稳定，或在纯零延迟教学testbench中等待1 ns。这个1 ns是测试安排，不是电路真实延迟。\n\n```vhdl\na <= '1'; b <= '0'; sel <= '0';\nwait for 1 ns;\nassert y = '1'\n  report \"mux selected wrong input\" severity failure;\nsel <= '1';\nwait for 1 ns;\nassert y = '0'\n  report \"mux selection failed\" severity failure;\n```\n\n独立实验可以使用`ghdl -a --std=08 file.vhd`分析、`ghdl -e --std=08 tb`展开、`ghdl -r --std=08 tb --assert-level=error --stop-time=100ns --wave=tb.ghw`运行。代码中的entity名须与tb匹配；三步标准模式要保持一致。这些是可复现实验说明，网站里的演示不是GHDL，也不声称支持任意VHDL程序。\n\n验证至少包含正常选择、只有未选中输入变化、只有选中输入变化、sel边界切换、初始状态。时序电路还需复位、保持、连续多拍和使能停止。将断言失败定位到“输入施加、更新轮次、预期表达式”三个环节，而不是先改预期值去迎合错误输出。"
+      "body": "先确定输入组合和预期结果，再写断言。对于零延迟组合mux，可以在testbench中依次施加全部$a,b,sel$组合，在模型规定的稳定窗口检查输出。若施加输入后立即assert，进程可能读到尚未更新的旧输出；可等待足够的delta稳定，或在纯零延迟教学testbench中等待1 ns。这个1 ns是测试安排，不是电路真实延迟。\n\n```vhdl\na <= '1'; b <= '0'; sel <= '0';\nwait for 1 ns;\nassert y = '1'\n  report \"mux selected wrong input\" severity failure;\nsel <= '1';\nwait for 1 ns;\nassert y = '0'\n  report \"mux selection failed\" severity failure;\n```\n\n可选工具扩展（不影响只看网站/PDF学会本章）：独立实验可以使用`ghdl -a --std=08 file.vhd`分析、`ghdl -e --std=08 tb`展开、`ghdl -r --std=08 tb --assert-level=error --stop-time=100ns --wave=tb.ghw`运行。代码中的entity名须与tb匹配；三步标准模式要保持一致。这些是可复现实验说明，网站里的演示不是GHDL，也不声称支持任意VHDL程序。\n\n验证至少包含正常选择、只有未选中输入变化、只有选中输入变化、sel边界切换、初始状态。时序电路还需复位、保持、连续多拍和使能停止。将断言失败定位到“输入施加、更新轮次、预期表达式”三个环节，而不是先改预期值去迎合错误输出。"
     },
     {
       "id": "tradeoff",
@@ -192,5 +192,63 @@
       "en": "self-checking testbench",
       "definition": "自动产生激励并用断言比较预期结果的仿真环境。"
     }
-  ]
+  ],
+  "walkthrough": {
+    "title": "逐行执行：两种交换为什么结果不一样？",
+    "duration": 30,
+    "goal": "你会在纸上分开“现在读到的signal值”“立即改变的variable值”“下一delta执行的预约”，并推演两个时钟沿。",
+    "steps": [
+      {
+        "title": "1. 把六行代码变成一张初值表",
+        "do": "先写sa=0、sb=1、va=0、vb=1、q=0、r=0，分出signal和variable两栏。",
+        "body": "**完整条件：** 所有对象都只取0/1。sa、sb、q、r是signal，初值分别0、1、0、0；va、vb是process内变量，初值0、1，并在相邻时钟调用间保留值。clk使用std_logic；已引入对应的rising_edge函数。上升沿在10 ns和20 ns到来，进程没有其它驱动，也没有after延迟。\n\n```vhdl\nprocess(clk)\n  variable va : bit := '0';\n  variable vb : bit := '1';\nbegin\n  if rising_edge(clk) then\n    sa <= sb;\n    sb <= sa;\n    va := vb;\n    vb := va;\n    q <= sa;\n    r <= va;\n  end if;\nend process;\n```\n\n先不用运行程序，只记两条规则：`<=`建立signal预约，不立刻改当前读数；`:=`立刻改变量，下一行会读到新值。下面的图把“执行进程”和“更新signal”分成两个框，它们都发生在10 ns这一物理时刻内。",
+        "figure": "back-m09-delta",
+        "check": {
+          "prompt": "哪四个对象使用预约更新，哪两个对象立即更新？",
+          "answer": "sa、sb、q、r是signal，使用<=预约；va、vb是variable，使用:=立即更新。"
+        }
+      },
+      {
+        "title": "2. 第一个沿：先只执行前两行",
+        "do": "在“待更新”栏写sa←1、sb←0；暂时不要擦掉当前sa=0、sb=1。",
+        "body": "10 ns上升沿唤醒process。第一行`sa <= sb`读到当前sb=1，预约sa=1。第二行`sb <= sa`读到的sa仍是0，因为第一行还没有执行signal更新，所以预约sb=0。\n\n| 执行到哪一行 | 当前sa | 当前sb | 预约列表 |\n|---|---:|---:|---|\n| 尚未执行 | 0 | 1 | 空 |\n| sa <= sb | 0 | 1 | sa←1 |\n| sb <= sa | 0 | 1 | sa←1，sb←0 |\n\n注意：这两行成功保留了两份旧值，因此稍后signal更新时可以完成交换。如果你第二行写成“sb预约1”，说明你把第一行误当成软件中的立即赋值。",
+        "check": {
+          "prompt": "执行完第二行之后，此刻读取sa得到0还是1？预约的sa又是多少？",
+          "answer": "当前读取仍为0，预约值是1。这两者必须分栏记录；预约存在不意味着当前值已变化。"
+        }
+      },
+      {
+        "title": "3. 再执行变量和两个观察输出",
+        "do": "逐行改va、vb，再确定q和r分别预约什么值。",
+        "body": "第三行`va := vb`读vb=1，立即把va变1。第四行`vb := va`现在读到的va已经是1，因此vb也变1。原来的va=0已经丢失，变量两行并没有交换成功。\n\n第五行`q <= sa`仍读旧sa=0，预约q=0。第六行`r <= va`读新va=1，预约r=1。\n\n| 执行后 | va | vb | 新增signal预约 | 理由 |\n|---|---:|---:|---|---|\n| va := vb | 1 | 1 | 无 | 立即覆盖va |\n| vb := va | 1 | 1 | 无 | 读取已经改变的va |\n| q <= sa | 1 | 1 | q←0 | sa尚未更新 |\n| r <= va | 1 | 1 | r←1 | va已经更新 |\n\n此时整个预约列表为sa←1、sb←0、q←0、r←1；当前signal仍为0、1、0、0。变量与signal在同一个process里服从各自的更新语义。",
+        "check": {
+          "prompt": "q和r的右边都只读一个对象，为什么一个预约0、另一个预约1？",
+          "answer": "q读未更新的signal sa=0；r读已被:=立即更新的变量va=1。差异来自更新时点，不是变量名或代码所在行号。"
+        }
+      },
+      {
+        "title": "4. 进程暂停后，才执行signal更新",
+        "do": "将预约值统一写入signal栏，标记为10 ns的下一delta；不要把时刻写成11 ns。",
+        "body": "process走到结尾并等待下一次时钟事件，模拟器进入signal更新阶段。结果为：\n\n| 观察时点 | sa | sb | va | vb | q | r |\n|---|---:|---:|---:|---:|---:|---:|\n| 10 ns上升沿前 | 0 | 1 | 0 | 1 | 0 | 0 |\n| 本次process执行完、更新前 | 0 | 1 | 1 | 1 | 0 | 0 |\n| 下一delta更新后 | 1 | 0 | 1 | 1 | 0 | 1 |\n\nsa/sb交换了，va/vb都变成1，q仍为0而r变1。q被再次写0不造成值变化，因此这次q事务不产生q的event。sa更新成1也不会让这个进程立刻重跑：敏感列表只有clk，进程内还要通过rising_edge(clk)条件。\n\n这解释了“为什么q没有立刻跟着sa变1”：q不是一条永久连接到sa的导线，而是在指定时钟沿读取sa并保存该值的寄存器行为。",
+        "check": {
+          "prompt": "sa变1后，q是否会在同一时刻再自动变1？解释触发条件。",
+          "answer": "不会。这个process仅由clk事件唤醒并在上升沿执行；sa的变化不会再次执行q<=sa。下一上升沿到来时q才会读取新的sa。"
+        }
+      },
+      {
+        "title": "5. 第二个沿：不用重新初始化任何对象",
+        "do": "把第一拍结束的值作为20 ns沿前值，重新运行同样六行。",
+        "body": "第二次调用前sa=1、sb=0、va=vb=1。前两行预约sa←0、sb←1；变量仍然都是1；q预约旧sa=1，r预约va=1。更新后：\n\n| 时点 | sa | sb | va | vb | q | r |\n|---|---:|---:|---:|---:|---:|---:|\n| 第1沿更新后 | 1 | 0 | 1 | 1 | 0 | 1 |\n| 第2沿更新后 | 0 | 1 | 1 | 1 | 1 | 1 |\n\nsignal每次交换，变量则第一次把0覆盖丢失后再也恢复不了。若你想让变量真正交换，必须先保存旧va：`tmp := va; va := vb; vb := tmp;`。这与软件交换的思路相同。\n\n变量在这里跨时钟保留数据；“立即更新”并不表示“不能形成寄存器”。应根据跨拍数据依赖判断硬件存储，而不是只看signal/variable关键字。至此，读懂本章代码所需的值、时序和规则都已在本页给齐。",
+        "check": {
+          "prompt": "把第三、四行改成使用tmp的真正交换后，若va=0、vb=1，执行后分别是什么？",
+          "answer": "tmp先保存0，再把va改1，最后vb取tmp=0，因此va=1、vb=0。"
+        }
+      }
+    ],
+    "exit": {
+      "prompt": "独立再做一次：沿前sa=1、sb=0、va=1、vb=0，执行原来的六行代码。给出沿后sa、sb、va、vb、q、r，并说明q读取哪一版sa。",
+      "answer": "sa←旧sb=0，sb←旧sa=1；va先取vb=0，vb再取新va=0；q预约旧sa=1，r预约新va=0。因此沿后为(sa,sb,va,vb,q,r)=(0,1,0,0,1,0)。q读取该次process执行前的sa，而非下一delta才生效的新sa。"
+    },
+    "next": "继续做本章的组合逻辑缺省赋值与敏感列表练习；然后进入第10章，用两份电路的输出差异理解测试。"
+  }
 }

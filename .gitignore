@@ -1,4 +1,5 @@
 node_modules/
+qa/figure-review/
 research/
 tmp/
 qa/*.png

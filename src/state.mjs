@@ -8,7 +8,7 @@ const timestamp=v=>finite(v)&&v>=0&&v<=DATE_LIMIT;
 const decimal=/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
 const validDate=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v)&&Number.isFinite(Date.parse(v+'T00:00:00Z'))&&new Date(v+'T00:00:00Z').toISOString().slice(0,10)===v;
 
-export function freshState(){return {version:1,read:[],notes:{},answers:{},grades:{},reviews:{},labNotes:{},numeric:{},settings:{startDate:'2026-11-08',hours:5,intervals:[1,3,7]},theme:'light'};}
+export function freshState(){return {version:1,read:[],notes:{},answers:{},coachAnswers:{},grades:{},reviews:{},labNotes:{},numeric:{},settings:{startDate:'2026-11-09',hours:5,intervals:[1,3,7]},theme:'light'};}
 
 function normalizeParams(id,v){
   const p={};if(!record(v))return p;
@@ -41,7 +41,7 @@ export function normalizeState(value,D){
   const modules=new Set((D.modules||[]).map(m=>m.id));
   const questions=new Map([
     ...(D.modules||[]).flatMap(m=>(m.exercises||[]).map(q=>[q.id,q])),
-    ...(D.examGuide?.mock?.questions||[]).map(q=>[q.id,{...q,maxScore:q.maxScore??q.points}])
+    ...[D.examGuide?.mock,D.examGuide?.transferMock].filter(Boolean).flatMap(p=>p.questions.map(q=>[q.id,{...q,maxScore:q.maxScore??q.points}]))
   ]);
   const labs=new Set((D.labs||[]).map(l=>l.id));
 
@@ -54,6 +54,7 @@ export function normalizeState(value,D){
   if(Array.isArray(value.read))r.read=[...new Set(value.read.filter(id=>typeof id==='string'&&modules.has(id)))];
   if(value.theme==='dark')r.theme='dark';
   for(const id of modules)if(own(value.notes,id)&&text(value.notes[id]))r.notes[id]=value.notes[id];
+  for(const m of D.modules||[]){for(const id of [...(m.walkthrough?.steps||[]).map((s,i)=>`${m.id}-step-${i+1}`),`${m.id}-exit`])if(own(value.coachAnswers,id)&&text(value.coachAnswers[id]))r.coachAnswers[id]=value.coachAnswers[id];}
   for(const [id,q] of questions){
     if(own(value.answers,id)&&text(value.answers[id]))r.answers[id]=value.answers[id];
     const g=own(value.grades,id)?value.grades[id]:null;

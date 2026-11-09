@@ -8,6 +8,13 @@ test('fresh state is detached, includes numeric, and round-trips',()=>{
   const a=freshState(),b=freshState();a.settings.intervals.push(20);assert.notDeepEqual(a,b);
   assert.deepEqual(normalizeState(JSON.parse(JSON.stringify(b)),D),b);
 });
+
+test('guided answers and second-paper evidence survive export/import without accepting unknown fields',()=>{
+  const content={...D,modules:[{...D.modules[0],walkthrough:{steps:[{}]}}],examGuide:{...D.examGuide,transferMock:{questions:[{id:'transfer-01',points:10}]}}};
+  const s=freshState();s.coachAnswers={'m08-step-1':'先排4ns事件','m08-exit':'高脉冲被滤掉','m08-step-999':'非法题号'};s.answers['transfer-01']='两项都必须选';s.grades['transfer-01']={score:8,kind:'self',date:1000};
+  const out=normalizeState(JSON.parse(JSON.stringify(s)),content);
+  assert.deepEqual(out.coachAnswers,{'m08-step-1':'先排4ns事件','m08-exit':'高脉冲被滤掉'});assert.equal(out.grades['transfer-01'].score,8);assert.deepEqual(out.read,[]);
+});
 test('reject malformed root without mutating the previous state',()=>{
   const prior=freshState();prior.notes.m08='保留笔记';const snapshot=structuredClone(prior);
   for(const bad of [null,[],1,'text',{}, {version:2}, {version:'1'}])assert.throws(()=>normalizeState(bad,D),/version=1/);
@@ -45,10 +52,10 @@ test('review levels clamp after intervals change and invalid dates cannot poison
   for(const due of [Infinity,NaN,-1,'100',8640000000000001])assert.deepEqual(normalizeState({version:1,reviews:{'m08-q1':{level:0,due}}},D).reviews,{});
 });
 test('settings validate real calendar dates and bounded numeric intervals',()=>{
-  assert.equal(normalizeState({version:1,settings:{startDate:'2026-02-30'}},D).settings.startDate,'2026-11-08');
+  assert.equal(normalizeState({version:1,settings:{startDate:'2026-02-30'}},D).settings.startDate,freshState().settings.startDate);
   assert.equal(normalizeState({version:1,settings:{startDate:'2028-02-29'}},D).settings.startDate,'2028-02-29');
   assert.deepEqual(normalizeState({version:1,settings:{hours:'7',intervals:[0,-1,'3']}},D).settings,freshState().settings);
-  assert.deepEqual(normalizeState({version:1,settings:{hours:7.5,intervals:[7,1,7,3]}},D).settings,{startDate:'2026-11-08',hours:7.5,intervals:[1,3,7]});
+  assert.deepEqual(normalizeState({version:1,settings:{hours:7.5,intervals:[7,1,7,3]}},D).settings,{startDate:freshState().settings.startDate,hours:7.5,intervals:[1,3,7]});
 });
 test('lab params use per-experiment whitelist; malformed vectors never reach includes',()=>{
   const out=normalizeState({version:1,labNotes:{faults:{predict:'ok',params:{vectors:{},html:'bad'}},qm:{params:{n:4,on:'0,1',dc:'2',unexpected:1}},events:{params:{width:'2',delay:'0',mode:'transport',vectors:[1]}},lfsr:{params:{seed:0,mask:3}},annealing:{params:{delta:'2',temperature:'0',random:'1'}}}},D);

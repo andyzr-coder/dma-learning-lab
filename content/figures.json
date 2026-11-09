@@ -1,0 +1,222 @@
+[
+  {
+    "id": "front-m01-flow",
+    "module": "m01",
+    "title": "一张真值表如何变成电路？",
+    "alt": "左侧为abc的8行真值表，f依次是0、1、0、1、0、1、1、1；右侧a和b进入AND，其输出与c进入OR。",
+    "caption": "真值表规定功能，方程表达功能，门图给出一种实现。这里只画理想组合逻辑，未指定工艺、物理延迟或电源。",
+    "svg": "figures/front-m01-flow.svg",
+    "png": "figures/front-m01-flow.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m01-ychart",
+    "module": "m01",
+    "title": "Y-chart：三个观察域 × 五个抽象层级",
+    "alt": "Y形三轴分别为行为、结构、物理；五个同心层从内到外为电路、逻辑、RT、算法、系统。右表给每个层级在三个域中的典型对象。",
+    "caption": "沿同一圈切换观察域，沿径向改变抽象层级。对应关系据课程Y-chart与Design Space页，示意距离没有定量单位。",
+    "svg": "figures/front-m01-ychart.svg",
+    "png": "figures/front-m01-ychart.png",
+    "width": 1400,
+    "height": 1000
+  },
+  {
+    "id": "front-m01-adder",
+    "module": "m01",
+    "title": "全加器：同一进位功能，关键路径可以不同",
+    "alt": "左图共享XOR的p信号给sum和carry，carry关键路径XOR-AND-OR为4时间单位。右图三个AND接三输入OR实现多数函数carry，路径2时间单位。",
+    "caption": "这是固定门模型下的延迟估算，不是纳秒或实测；右图只画carry部分，不能直接拿其门数与左图完整全加器比较面积。",
+    "svg": "figures/front-m01-adder.svg",
+    "png": "figures/front-m01-adder.png",
+    "width": 1400,
+    "height": 1080
+  },
+  {
+    "id": "front-m02-kmap",
+    "module": "m02",
+    "title": "K-map：圈的是相邻输入，留下不变变量",
+    "alt": "两行四列K-map，a为行，bc按00、01、11、10为列。c=1的四格圈成c；a=b=1的两格圈成ab，m7重叠。",
+    "caption": "从固定变量得到乘积项；覆盖所有1且不覆盖0。图中颜色与文字标签双重标识分组。",
+    "svg": "figures/front-m02-kmap.svg",
+    "png": "figures/front-m02-kmap.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m02-cofactor",
+    "module": "m02",
+    "title": "Cofactor 与 Shannon：先固定 a，再选子函数",
+    "alt": "左侧分别固定a为0和1得到c与b+c，接入以a为选择端的MUX；a=0选择上支，a=1选择下支。",
+    "caption": "Cofactor是把变量固定后的函数，不是求导；Shannon展开的两项带互斥选择条件。",
+    "svg": "figures/front-m02-cofactor.svg",
+    "png": "figures/front-m02-cofactor.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m03-quine",
+    "module": "m03",
+    "title": "Quine：只能合并一个固定比特不同的 cube",
+    "alt": "六个二进制minterm组成相邻六环，六条边标出P00–、R–01、T1–1、U11–、S–10、Q0–0。没有合法的下一轮合并。",
+    "caption": "只合并固定位置相同、恰好一个固定比特相反的两个cube。本例六个PI分别覆盖两个ON点。",
+    "svg": "figures/front-m03-quine.svg",
+    "png": "figures/front-m03-quine.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m03-cover",
+    "module": "m03",
+    "title": "PI 覆盖表：选行，覆盖每一列",
+    "alt": "6行6列覆盖表，P覆盖0与1，Q覆盖0与2，R覆盖1与5，S覆盖2与6，T覆盖5与7，U覆盖6与7。PST与QRU都覆盖六列。",
+    "caption": "两种最优覆盖均为3项、6 literal；无EPI不等于无解。此表的选择变量P至U不是电路输入a,b,c。",
+    "svg": "figures/front-m03-cover.svg",
+    "png": "figures/front-m03-cover.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m04-trajectory",
+    "module": "m04",
+    "title": "启发式局部操作：每一步都检查当前 cover",
+    "alt": "四个cover依次abc+ab¬c+¬abc、ab+ab¬c+¬abc、ab+¬abc、ab+bc，literal数量9、8、5、4。每次扩张只新增既有ON点。",
+    "caption": "轨迹是一个可复算的合法局部优化例子。成本下降不能替代功能等价验证；顺序与当前覆盖会影响后续操作。",
+    "svg": "figures/front-m04-trajectory.svg",
+    "png": "figures/front-m04-trajectory.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m05-factor",
+    "module": "m05",
+    "title": "因式分解：相同功能可以有不同门网络",
+    "alt": "左图两个AND分别算ab和ac再进OR，共3门。右图OR先算b+c再与a进入AND，共2门。两者最长路径均为2级。",
+    "caption": "门数是明确约定下的结构成本。该图不声称真实面积、功耗或延迟按门数同比缩减。",
+    "svg": "figures/front-m05-factor.svg",
+    "png": "figures/front-m05-factor.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m05-decomposition",
+    "module": "m05",
+    "title": "函数分解：先把相同余函数分成一类",
+    "alt": "固定bc为00、01、10、11后，关于a的余函数依次为0、a、a、a；分为两类，编码z取0、1、1、1，即z=b+c，最后f=az。",
+    "caption": "余函数比较的是整个剩余函数，不是选一个输入点比较值；μ=2给出一位编码下界。",
+    "svg": "figures/front-m05-decomposition.svg",
+    "png": "figures/front-m05-decomposition.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "front-m06-bdd",
+    "module": "m06",
+    "title": "ROBDD：变的是共享结构，不是函数",
+    "alt": "左图变量顺序abcd有9个非终端节点，右图acbd有6个。虚线蓝边为low0，实线橙边为high1，终端0和1用方框表示。",
+    "caption": "这是完全构造并约简的两张ROBDD；改变变量序不改布尔函数，但会改变节点共享和规模。图中每个节点的0/1边都有独立标识。",
+    "svg": "figures/front-m06-bdd.svg",
+    "png": "figures/front-m06-bdd.png",
+    "width": 1400,
+    "height": 940
+  },
+  {
+    "id": "front-m07-fsm",
+    "module": "m07",
+    "title": "重叠检测 101：状态记录“有用的后缀”",
+    "alt": "三个状态S0、S1、S2表示无前缀、见1、见10。S2收到1输出1并回到S1，所以输入10101可以识别重叠的两个101，输出00101。",
+    "caption": "识别成功后保留末尾1作为下一次匹配的前缀；若回到S0就会漏掉重叠检测。此图的输出在边上，不是Moore状态输出。",
+    "svg": "figures/front-m07-fsm.svg",
+    "png": "figures/front-m07-fsm.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "back-m08-pulse",
+    "module": "m08",
+    "title": "同一个短脉冲：transport 保留，简化 inertial 抑制",
+    "alt": "同一横轴0到8纳秒：输入在1到3纳秒为1，transport输出在4到6纳秒为1，简化inertial输出保持0。",
+    "caption": "单门、单驱动、单个孤立脉冲、二值模型；不是完整VHDL projected waveform规则或模拟电压预测。",
+    "svg": "figures/back-m08-pulse.svg",
+    "png": "figures/back-m08-pulse.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "back-m08-queue",
+    "module": "m08",
+    "title": "事件账本：安排未来事务 ≠ 输出现在改变",
+    "alt": "队列表列出0、1、3、4、6纳秒处理后状态：transport在3纳秒队列为4→1和6→0，inertial则撤销4→1。",
+    "caption": "队列是模拟器的因果记录，不是电路里实际存在的一条队列。只列影响输出变化的有效事务。",
+    "svg": "figures/back-m08-queue.svg",
+    "png": "figures/back-m08-queue.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "back-m09-delta",
+    "module": "m09",
+    "title": "signal 与 variable：同一段顺序代码的两种更新",
+    "alt": "左侧六行代码sa<=sb、sb<=sa、va:=vb、vb:=va、q<=sa、r<=va。右表显示进程后变量变11而信号保持01，delta后信号变10，q0r1。",
+    "caption": "读出右值的时机与写入生效的时机必须分开记录。图中变量初始化一次并跨时钟沿保持，不在每次调用时重置。",
+    "svg": "figures/back-m09-delta.svg",
+    "png": "figures/back-m09-delta.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "back-m10-fault",
+    "module": "m10",
+    "title": "一个测试向量必须同时做到：激活故障 ＋ 传播差异",
+    "alt": "左右并排的同一AND-OR电路输入110，正常n1y1，n/0故障电路n0y0。对比111仅激活却被c1掩盖，100连激活也没有。",
+    "caption": "观察点只有y。只有正常与故障y不同，才能说此向量检测该单stuck-at故障。",
+    "svg": "figures/back-m10-fault.svg",
+    "png": "figures/back-m10-fault.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "back-m11-dpath",
+    "module": "m11",
+    "title": "D 算法手算：先放差异，再把它送到输出",
+    "alt": "n处放D代表正常1故障0，OR要传播D则旁路c必须0，AND正常端要n1则a和b都必须1；最终向量110使y=D。",
+    "caption": "这是单目标的成功手算路径；复杂电路必须继续检查全局蕴含与冲突，某条路径失败不代表故障不可测。",
+    "svg": "figures/back-m11-dpath.svg",
+    "png": "figures/back-m11-dpath.png",
+    "width": 1200,
+    "height": 820
+  },
+  {
+    "id": "back-m12-matrix",
+    "module": "m12",
+    "title": "完整故障矩阵：行是输入，列是候选单故障",
+    "alt": "8行输入000至111、10列故障a/0、a/1、b/0、b/1、c/0、c/1、n/0、n/1、y/0、y/1组成完整检测矩阵。突出001、010、100、110四行。",
+    "caption": "每个格子由独立良好/故障电路计算。必选010、100、110后，还需一条c/0检测向量，证明最小集大小为4。",
+    "svg": "figures/back-m12-matrix.svg",
+    "png": "figures/back-m12-matrix.png",
+    "width": 1400,
+    "height": 880
+  },
+  {
+    "id": "back-m13-lfsr",
+    "module": "m13",
+    "title": "LFSR：明确位顺序，再数第一次重复",
+    "alt": "四个触发器从s3向s0右移，s0和s1异或反馈到s3。完整非零序列0001、1000、0100、0010、1001、1100、0110、1011、0101、1010、1101、1110、1111、0111、0011后回0001。",
+    "caption": "所有更新同时使用旧状态。周期15只对应此明确递推与非零种子；全零种子锁在零态。",
+    "svg": "figures/back-m13-lfsr.svg",
+    "png": "figures/back-m13-lfsr.png",
+    "width": 1400,
+    "height": 980
+  },
+  {
+    "id": "back-m13-scan",
+    "module": "m13",
+    "title": "Scan 时间账本：边卸旧响应，边装新向量",
+    "alt": "扫描链Q3到Q0右移，共19拍：1至4装P1，5捕获R1，6至9出R1入P2，10捕R2，11至14出R2入P3，15捕R3，16至19末次卸R3。",
+    "caption": "capture的取反功能仅为独立教学例，与LFSR递推无关；N(P+1)+P假设相邻组允许同时移出旧响应和移入新测试。",
+    "svg": "figures/back-m13-scan.svg",
+    "png": "figures/back-m13-scan.png",
+    "width": 1400,
+    "height": 960
+  }
+]

@@ -5,7 +5,7 @@ root=Path(__file__).resolve().parents[1]
 target=root/'public/downloads';target.mkdir(parents=True,exist_ok=True)
 private={'github_private.py','extract_sources.py','build-source-registry.py','write_synthesis.py','build_testing_content.py','audit-doc-source.py'}
 def allowed(p):
-    return p.is_file() and p.name not in private and p.suffix not in {'.zip','.log','.png','.jpg','.pyc'} and '__pycache__' not in p.parts and 'pdf-review' not in p.parts
+    return p.is_file() and p.name not in private and p.suffix not in {'.zip','.log','.pyc'} and (p.suffix not in {'.png','.jpg'} or 'figures' in p.parts) and '__pycache__' not in p.parts and 'pdf-review' not in p.parts and 'figure-review' not in p.parts
 files=[]
 for folder in ['src','content','tools','tests','public','qa']:
     files.extend(p for p in (root/folder).rglob('*') if allowed(p))

@@ -4,15 +4,15 @@
 
 [公开网站](https://andyzr-coder.github.io/dma-learning-lab/) · [PDF 手册](https://andyzr-coder.github.io/dma-learning-lab/downloads/dma-handbook.pdf) · [离线 HTML](https://andyzr-coder.github.io/dma-learning-lab/downloads/dma-handbook.html) · [完整来源索引](https://andyzr-coder.github.io/dma-learning-lab/downloads/source-index.json)
 
-13 章、79 道分层练习、6 个交互实验、5 场去重历史试卷索引、10 题原创 60 分模拟卷。默认 10 天、49 小时净学习，可调整开始日、每日预算和复习间隔。
+13 章逐步图解课、79 道分层练习、6 个交互实验、两份完整 60 分训练卷（A/B）、5 场历史试卷索引。图、条件、逐行计算和答案已放在正文内，无需打开其他资料完成主线路线。默认 10 天、49 小时净学习，可调整开始日、每日预算和复习间隔。
 
 ## 如何学习
 
-1. 进入「10 天学习路线」，做 Day 1 的短诊断，定位最早出错的步骤。
-2. 逐章按示范 → 补全 → 独立 → 迁移学习。熟悉内容先用新题验证后跳过。
+1. 进入「10 天学习路线」，按当天列出的具体章号、题号、参数学习。Day 1 从 ab+c 的门图与8行真值表开始。
+2. 先打开每章「图解跟做」，按“现在做”动笔；到“停一下”先补步骤再展开答案。图片可放大，跟做草稿自动保存。再做章末独立题。
 3. 实验按预测 → 参数 → 状态 → 解释 → 变式进行；每个实验注明模型、假设、手算和边界。
 4. 完成阅读与独立能力分开记录。数值核对不自动授予推导分；开放题按量表自评。至少两道独立/迁移题达到80%，章节才显示有独立证据。
-5. 留 F088 给 Day 8，F055 给 Day 9；前七天避免接触这两份卷的解答。若已经做过，记为复练，不能冒充盲测。
+5. Day 8 做站内训练卷 A，Day 9 做站内训练卷 B；两卷条件、答案与量表齐全。历史原卷仅供选学，不是主线必开材料。若已经看过答案，记为复练。
 6. 换设备前在「笔记与备份」导出 JSON；新设备再导入。没有云同步。
 
 ## 内容
@@ -22,7 +22,7 @@
 - 事件与delta、transport/inertial、VHDL信号/变量与建模边界。
 - 故障覆盖、布尔差分、D算法/global implication、故障仿真、scan/LFSR/BIST。
 
-资料核验截至 **2026-11-08**。本地101份真实PDF已去除资源分叉文件，包含重复副本与合订本；原文件共1710个PDF页，不能视为全部逐页精读。手写及合订文件的具体抽样页在来源审计中明示。原PDF保持本地，公开仓库只含原创讲解、来源定位和教学代码。
+图解跟学版更新于 **2026-11-09**；原始资料核验日为 **2026-11-08**。本地101份真实PDF已去除资源分叉文件，包含重复副本与合订本；原文件共1710个PDF页，不能视为全部逐页精读。手写及合订文件的具体抽样页在来源审计中明示。原PDF保持本地，公开仓库只含原创讲解、来源定位和教学代码。
 
 文件名不是考试日期：“19_retake”卷内2020-06-29；“21_retake”卷内2022-05-06且含答案；“DMA22_retake”卷内2023-06-20。历史样本均60分钟/60分，本次考试安排、及格线与允许资料以学校正式通知为准。
 
@@ -40,18 +40,18 @@ npm run dev
 
 访问 `http://127.0.0.1:4174/`。默认服务器仅绑定本机。前端不依赖外部CDN；KaTeX在构建时生成公式，字体随站点分发。
 
-下载的独立 `dma-handbook.html` 可直接双击离线阅读，包含可折叠答案和全部模考。整个网站也可下载 `dma-offline-website.zip`：解压后用 Node.js 执行 `node tools/serve.mjs`，不需要 npm 安装。ES模块网站不适合直接用 file:// 打开。
+下载的独立 `dma-handbook.html` 可直接双击离线阅读，内嵌全部教学插图、公式字体、可折叠答案和两份训练卷。整个网站也可下载 `dma-offline-website.zip`：解压后用 Node.js 执行 `node tools/serve.mjs`，不需要 npm 安装。ES模块网站不适合直接用 file:// 打开。
 
 ## 改内容与生成手册
 
-`content/modules/*.json` 是课程唯一内容源；`src/` 仅负责界面和模型。`content/plan.json`、`exam-map.json`、`exam-guide.json`、`labs.json`、`cases.json`、`source-registry.json` 与 `external-*.json` 描述路线、练习、实验与证据。
+`content/modules/*.json` 的 `walkthrough` 描述跟做课（动作、图号、完整示范、检查题、退出题）；`sections` 保留系统概念与算法详解。`content/figures.json` 记录原创 SVG/PNG 插图，`tools/generate-figures.py` 可重建插图（需要 Pillow 和 Microsoft YaHei 字体）。这些是网站与离线手册共享的内容源；`src/` 仅负责界面和模型。`content/plan.json`、`exam-map.json`、`exam-guide.json`、`labs.json`、`cases.json`、`source-registry.json` 与 `external-*.json` 描述路线、练习、实验与证据。
 
 `npm run build` 生成 `dist/`、离线 HTML、可编辑 Markdown 和数据下载。已生成PDF随仓库交付；修改课程后要重新执行PDF命令，构建网站不会自动调用TeX。
 
 Windows 本机生成中文 PDF（已安装 Pandoc、XeLaTeX、Eisvogel，字体 Cambria/Segoe UI/Consolas/Microsoft YaHei）：
 
 ```powershell
-pandoc public/downloads/dma-handbook.md -o public/downloads/dma-handbook.pdf --pdf-engine=xelatex --template="F:\office_beautify\pandoc\templates\eisvogel.latex" --toc --number-sections --toc-depth=2 --syntax-highlighting=tango
+pandoc public/downloads/dma-handbook.md -o public/downloads/dma-handbook.pdf --pdf-engine=xelatex --template="F:\office_beautify\pandoc\templates\eisvogel.latex" --toc --number-sections --toc-depth=2 --syntax-highlighting=tango --resource-path=public/downloads
 npm run build
 ```
 
@@ -61,7 +61,7 @@ npm run build
 
 ## 验证与模型边界
 
-`npm test` 包含28个测试组：QM独立精确oracle、全部6561种三变量On/Off/DC规范、160个四变量样本；BDD全部三变量函数与6种变量顺序；事件阈值和同刻队列；完整检测矩阵及最少4向量证明；全部16种LFSR mask×16种seed；导入数据边界等。另有68项后半课程算例检查及综合章节独立验证。
+`npm test` 包含40个模型/记录/界面回归测试组（含图解矩阵、跟做草稿与第二训练卷导入）：QM独立精确oracle、全部6561种三变量On/Off/DC规范、160个四变量样本；BDD全部三变量函数与6种变量顺序；事件阈值和同刻队列；完整检测矩阵及最少4向量证明；全部16种LFSR mask×16种seed；导入数据边界等。另有68项后半课程算例检查及综合章节独立验证。
 
 `qa/` 保存验收记录。浏览器手工核验覆盖手机布局、搜索、章节跳转、折叠答案、数值核对、自评、笔记持久化、JSON导入导出和交互实验。
 

@@ -1,0 +1,756 @@
+[
+  {
+    "id": "back-m08-pulse",
+    "module": "m08",
+    "title": "同一个2 ns脉冲，为什么出现两种输出？",
+    "description": "三个上下对齐波形：I在1 ns上升、3 ns下降；transport在4 ns上升、6 ns下降；简化inertial全程0。共享横轴0到8 ns；标脉宽w=2 ns、延迟d=3 ns。用虚线连接输入与transport输出对应沿，inertial处标注3 ns撤销尚未执行的4 ns上升。",
+    "data": {
+      "timeUnit": "ns",
+      "horizon": 8,
+      "input": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "transport": [
+        [
+          0,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          6,
+          0
+        ]
+      ],
+      "inertial": [
+        [
+          0,
+          0
+        ]
+      ],
+      "width": 2,
+      "delay": 3
+    },
+    "limits": "单门、单脉冲、二值模型；不是完整VHDL driver或电压波形。"
+  },
+  {
+    "id": "back-m08-queue",
+    "module": "m08",
+    "title": "先排队，后生效：逐时刻事件账本",
+    "description": "两列对比transport与inertial在1、3、4、6 ns时输出及待执行队列。明确4 ns→1是未来事务，不是1 ns已发生输出。",
+    "data": {
+      "columns": [
+        "时刻/ns",
+        "发生的输入变化",
+        "transport待执行队列",
+        "transport输出",
+        "inertial待执行队列",
+        "inertial输出"
+      ],
+      "rows": [
+        [
+          "0",
+          "初值0",
+          "空",
+          0,
+          "空",
+          0
+        ],
+        [
+          "1",
+          "I:0→1",
+          "4→1",
+          0,
+          "4→1",
+          0
+        ],
+        [
+          "3",
+          "I:1→0",
+          "4→1；6→0",
+          0,
+          "撤销4→1，队列空",
+          0
+        ],
+        [
+          "4",
+          "无",
+          "6→0",
+          1,
+          "空",
+          0
+        ],
+        [
+          "6",
+          "无",
+          "空",
+          0,
+          "空",
+          0
+        ]
+      ]
+    },
+    "limits": "inertial列只保留会改变输出的有效事件，同值写0事务省略。"
+  },
+  {
+    "id": "back-m09-delta",
+    "module": "m09",
+    "title": "signal交换成功，variable依次覆盖；delta只更新signal",
+    "description": "左栏初始sa0/sb1/va0/vb1，中央六行代码，右栏分两阶段显示立即变量值与未来信号事务，再显示delta更新后sa1/sb0/q0/r1。第二沿结果附在底部。不要把delta画成ns延迟。",
+    "data": {
+      "code": [
+        "sa <= sb;",
+        "sb <= sa;",
+        "va := vb;",
+        "vb := va;",
+        "q <= sa;",
+        "r <= va;"
+      ],
+      "initial": {
+        "sa": 0,
+        "sb": 1,
+        "va": 0,
+        "vb": 1,
+        "q": 0,
+        "r": 0
+      },
+      "afterProcess": {
+        "sa": 0,
+        "sb": 1,
+        "va": 1,
+        "vb": 1,
+        "q": 0,
+        "r": 0
+      },
+      "pending": {
+        "sa": 1,
+        "sb": 0,
+        "q": 0,
+        "r": 1
+      },
+      "afterDelta": {
+        "sa": 1,
+        "sb": 0,
+        "va": 1,
+        "vb": 1,
+        "q": 0,
+        "r": 1
+      },
+      "afterSecondEdgeAndDelta": {
+        "sa": 0,
+        "sb": 1,
+        "va": 1,
+        "vb": 1,
+        "q": 1,
+        "r": 1
+      }
+    },
+    "limits": "同一clocked process；sa/sb/q/r为signal，va/vb为持久process变量；无额外after延迟。"
+  },
+  {
+    "id": "back-m10-fault",
+    "module": "m10",
+    "title": "激活＋传播：把正常电路与故障电路并排看",
+    "description": "双栏同一网表a,b→AND→n，n,c→OR→y。输入110；正常n1 y1，故障n/0处强制0且y0，用颜色标差异。底部另列111：n差异仍在但c1把y都压为1。",
+    "data": {
+      "netlist": {
+        "n": "a AND b",
+        "y": "n OR c"
+      },
+      "fault": "n/0",
+      "cases": [
+        {
+          "vector": "110",
+          "good": {
+            "n": 1,
+            "y": 1
+          },
+          "faulty": {
+            "n": 0,
+            "y": 0
+          },
+          "detected": true
+        },
+        {
+          "vector": "111",
+          "good": {
+            "n": 1,
+            "y": 1
+          },
+          "faulty": {
+            "n": 0,
+            "y": 1
+          },
+          "detected": false
+        },
+        {
+          "vector": "100",
+          "good": {
+            "n": 0,
+            "y": 0
+          },
+          "faulty": {
+            "n": 0,
+            "y": 0
+          },
+          "detected": false
+        }
+      ]
+    },
+    "limits": "5个节点10个单stuck-at故障模型；此图仅演示n/0。"
+  },
+  {
+    "id": "back-m11-dpath",
+    "module": "m11",
+    "title": "D算法三步：n放D → c置0 → a、b都置1",
+    "description": "同一AND-OR网表，用编号箭头标激活n=D(1/0)、传播OR旁路c=0使y=D、反推AND正常n1要求a=b1。初态未知X与终态110对照。",
+    "data": {
+      "target": "n/0",
+      "initial": {
+        "a": "X",
+        "b": "X",
+        "c": "X",
+        "n": "X",
+        "y": "X"
+      },
+      "activated": {
+        "a": "X",
+        "b": "X",
+        "c": "X",
+        "n": "D",
+        "y": "X"
+      },
+      "propagated": {
+        "a": "X",
+        "b": "X",
+        "c": 0,
+        "n": "D",
+        "y": "D"
+      },
+      "justified": {
+        "a": 1,
+        "b": 1,
+        "c": 0,
+        "n": "D",
+        "y": "D"
+      },
+      "D": "正常1 / 故障0"
+    },
+    "limits": "单目标ATPG手算，不是完整搜索算法。"
+  },
+  {
+    "id": "back-m12-matrix",
+    "module": "m12",
+    "title": "8个输入×10个故障：1表示能检测",
+    "description": "行顺序000..111，列固定为faults数组。附正常n/y列。突出010、100、110三条必选行，以及001补足c/0；用1/0及点形双编码，避免仅凭颜色。底部给最小集合与至少4条证明提示。",
+    "data": {
+      "faults": [
+        "a/0",
+        "a/1",
+        "b/0",
+        "b/1",
+        "c/0",
+        "c/1",
+        "n/0",
+        "n/1",
+        "y/0",
+        "y/1"
+      ],
+      "rows": [
+        {
+          "vector": "000",
+          "n": 0,
+          "goodY": 0,
+          "detected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "faultyY": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "vector": "001",
+          "n": 0,
+          "goodY": 1,
+          "detected": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "faultyY": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "vector": "010",
+          "n": 0,
+          "goodY": 0,
+          "detected": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "faultyY": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "vector": "011",
+          "n": 0,
+          "goodY": 1,
+          "detected": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "faultyY": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "vector": "100",
+          "n": 0,
+          "goodY": 0,
+          "detected": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "faultyY": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "vector": "101",
+          "n": 0,
+          "goodY": 1,
+          "detected": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "faultyY": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "vector": "110",
+          "n": 1,
+          "goodY": 1,
+          "detected": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0
+          ],
+          "faultyY": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "vector": "111",
+          "n": 1,
+          "goodY": 1,
+          "detected": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "faultyY": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1
+          ]
+        }
+      ],
+      "selected": [
+        "001",
+        "010",
+        "100",
+        "110"
+      ],
+      "mandatory": [
+        "010",
+        "100",
+        "110"
+      ],
+      "minimumSets": [
+        [
+          "001",
+          "010",
+          "100",
+          "110"
+        ],
+        [
+          "010",
+          "011",
+          "100",
+          "110"
+        ],
+        [
+          "010",
+          "100",
+          "101",
+          "110"
+        ]
+      ]
+    },
+    "limits": "n=a AND b,y=n OR c；每次仅一故障；仅观察y；原始故障分母10。"
+  },
+  {
+    "id": "back-m13-lfsr",
+    "module": "m13",
+    "title": "4位右移LFSR：从0001数到第一次重复",
+    "description": "上部4寄存器s3,s2,s1,s0，右移箭头，s0与s1取XOR反馈到新s3。下部完整15态环或分行箭头，显示0001→1000→0100→0010→1001→1100→0110→1011→0101→1010→1101→1110→1111→0111→0011→0001。另小框0000自环。",
+    "data": {
+      "direction": "right",
+      "feedback": "f=s0 XOR s1",
+      "next": "new=[f,s3,s2,s1]",
+      "mask": 3,
+      "seed": 1,
+      "period": 15,
+      "trace": [
+        {
+          "step": 0,
+          "bits": "0001",
+          "decimal": 1,
+          "s1": 0,
+          "s0": 1,
+          "feedback": 1,
+          "next": 8
+        },
+        {
+          "step": 1,
+          "bits": "1000",
+          "decimal": 8,
+          "s1": 0,
+          "s0": 0,
+          "feedback": 0,
+          "next": 4
+        },
+        {
+          "step": 2,
+          "bits": "0100",
+          "decimal": 4,
+          "s1": 0,
+          "s0": 0,
+          "feedback": 0,
+          "next": 2
+        },
+        {
+          "step": 3,
+          "bits": "0010",
+          "decimal": 2,
+          "s1": 1,
+          "s0": 0,
+          "feedback": 1,
+          "next": 9
+        },
+        {
+          "step": 4,
+          "bits": "1001",
+          "decimal": 9,
+          "s1": 0,
+          "s0": 1,
+          "feedback": 1,
+          "next": 12
+        },
+        {
+          "step": 5,
+          "bits": "1100",
+          "decimal": 12,
+          "s1": 0,
+          "s0": 0,
+          "feedback": 0,
+          "next": 6
+        },
+        {
+          "step": 6,
+          "bits": "0110",
+          "decimal": 6,
+          "s1": 1,
+          "s0": 0,
+          "feedback": 1,
+          "next": 11
+        },
+        {
+          "step": 7,
+          "bits": "1011",
+          "decimal": 11,
+          "s1": 1,
+          "s0": 1,
+          "feedback": 0,
+          "next": 5
+        },
+        {
+          "step": 8,
+          "bits": "0101",
+          "decimal": 5,
+          "s1": 0,
+          "s0": 1,
+          "feedback": 1,
+          "next": 10
+        },
+        {
+          "step": 9,
+          "bits": "1010",
+          "decimal": 10,
+          "s1": 1,
+          "s0": 0,
+          "feedback": 1,
+          "next": 13
+        },
+        {
+          "step": 10,
+          "bits": "1101",
+          "decimal": 13,
+          "s1": 0,
+          "s0": 1,
+          "feedback": 1,
+          "next": 14
+        },
+        {
+          "step": 11,
+          "bits": "1110",
+          "decimal": 14,
+          "s1": 1,
+          "s0": 0,
+          "feedback": 1,
+          "next": 15
+        },
+        {
+          "step": 12,
+          "bits": "1111",
+          "decimal": 15,
+          "s1": 1,
+          "s0": 1,
+          "feedback": 0,
+          "next": 7
+        },
+        {
+          "step": 13,
+          "bits": "0111",
+          "decimal": 7,
+          "s1": 1,
+          "s0": 1,
+          "feedback": 0,
+          "next": 3
+        },
+        {
+          "step": 14,
+          "bits": "0011",
+          "decimal": 3,
+          "s1": 1,
+          "s0": 1,
+          "feedback": 0,
+          "next": 1
+        }
+      ],
+      "repeat": 1
+    },
+    "limits": "明确位顺序s3s2s1s0；无需通过别的多项式约定猜抽头。"
+  },
+  {
+    "id": "back-m13-scan",
+    "module": "m13",
+    "title": "3组测试为什么用19拍，而不是27拍？",
+    "description": "画cycles1..19，shift绿色、capture橙色；区段1–4装P1，5捕获R1，6–9出R1/入P2，10捕R2，11–14出R2/入P3，15捕R3，16–19末卸R3。标四位链资源复用，输出旧响应与装新向量同时发生。",
+    "data": {
+      "N": 4,
+      "P": 3,
+      "captureCycles": 1,
+      "totalCycles": 19,
+      "unoverlappedCycles": 27,
+      "segments": [
+        {
+          "from": 1,
+          "to": 4,
+          "mode": "shift",
+          "in": "P1=1010（输入顺序0,1,0,1）",
+          "out": "初态/忽略"
+        },
+        {
+          "from": 5,
+          "to": 5,
+          "mode": "capture",
+          "state": "R1=0101"
+        },
+        {
+          "from": 6,
+          "to": 9,
+          "mode": "shift",
+          "in": "P2=0011",
+          "out": "R1=0101"
+        },
+        {
+          "from": 10,
+          "to": 10,
+          "mode": "capture",
+          "state": "R2=1100"
+        },
+        {
+          "from": 11,
+          "to": 14,
+          "mode": "shift",
+          "in": "P3=1110",
+          "out": "R2=1100"
+        },
+        {
+          "from": 15,
+          "to": 15,
+          "mode": "capture",
+          "state": "R3=0001"
+        },
+        {
+          "from": 16,
+          "to": 19,
+          "mode": "shift",
+          "in": "0（填充）",
+          "out": "R3=0001"
+        }
+      ],
+      "captureDemo": "每次capture的教学功能是Q←NOT Q，移位是新Q3=scan_in，scan_out为旧Q0。"
+    },
+    "limits": "独立于上图LFSR的扫描演示；每组1次capture，shift/采样均1拍，不计模式切换。"
+  }
+]

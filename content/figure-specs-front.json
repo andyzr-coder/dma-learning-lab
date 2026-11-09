@@ -1,0 +1,67 @@
+[
+  {
+    "id": "front-m01-flow", "module": "m01", "title": "从一句需求到八行真值表，再接成门电路",
+    "description": "教学例 f=ab+c。a,b,c 均为布尔变量，a 为二进制最高位。左侧需求：c=1 时输出1；否则只有 a=b=1 时输出1。中间8行真值表包含 a,b,c,n=a AND b,y=n OR c。右侧 a,b 接两输入AND，内部线n与c接OR输出y。仅理想单位门延迟，a/b路径2级，c路径1级。",
+    "columns": ["编号","a","b","c","n=ab","y"],
+    "rows": [[0,0,0,0,0,0],[1,0,0,1,0,1],[2,0,1,0,0,0],[3,0,1,1,0,1],[4,1,0,0,0,0],[5,1,0,1,0,1],[6,1,1,0,1,1],[7,1,1,1,1,1]],
+    "labels": ["需求（行为）","真值表（行为）","AND → OR（结构）","物理位置与连线尚未确定"]
+  },
+  {
+    "id": "front-m02-kmap", "module": "m02", "title": "Gray 顺序让相邻格只差一位",
+    "description": "f=ab+c，ON={1,3,5,6,7}。行 a=0,1；列 bc=00,01,11,10。每格同时标 minterm 编号和0/1。用两种明显区分的颜色圈出中间两列共4格(1,3,5,7)得到c，以及底行最后两格(7,6)得到ab，格7同时被两个圈覆盖。注明不必不重叠、圈内不能含OFF点。",
+    "rowLabels": ["a=0","a=1"], "columnLabels": ["bc=00","bc=01","bc=11","bc=10"],
+    "indices": [[0,1,3,2],[4,5,7,6]], "values": [[0,1,1,0],[0,1,1,1]],
+    "groups": [{"cells":[1,3,5,7],"term":"c","cube":"--1"},{"cells":[6,7],"term":"ab","cube":"11-"}]
+  },
+  {
+    "id": "front-m02-cofactor", "module": "m02", "title": "固定 a 后，剩下的是两个更小的函数",
+    "description": "左右两个2变量表/切片：a=0时 f=c；a=1时 f=b+c。b,c依次00,01,10,11，左值0,1,0,1；右值0,1,1,1。用a选择器示意 Shannon f=a' f_a=0 + a f_a=1。强调cofactor删除变量a，而不是f与a相乘。",
+    "rows": [[0,0,0,0],[0,1,1,1],[1,0,0,1],[1,1,1,1]],
+    "columns": ["b","c","f(a=0)","f(a=1)"]
+  },
+  {
+    "id": "front-m03-quine", "module": "m03", "title": "Quine–McCluskey：所有合法的一次合并",
+    "description": "ON={0,1,2,5,6,7}，D为空。按1数分组：G0={000},G1={001,010},G2={101,110},G3={111}。画合并连线到六个PI：P=00- (0,1),Q=0-0 (0,2),R=-01 (1,5),S=-10 (2,6),T=1-1 (5,7),U=11- (6,7)。禁止表示任何二次合并；同dash位置的候选均有两固定位不同，所以停止。",
+    "groups": [["000"],["001","010"],["101","110"],["111"]],
+    "primes": [{"id":"P","cube":"00-","minterms":[0,1]},{"id":"Q","cube":"0-0","minterms":[0,2]},{"id":"R","cube":"-01","minterms":[1,5]},{"id":"S","cube":"-10","minterms":[2,6]},{"id":"T","cube":"1-1","minterms":[5,7]},{"id":"U","cube":"11-","minterms":[6,7]}]
+  },
+  {
+    "id": "front-m03-cover", "module": "m03", "title": "没有必要主蕴含项，也能得到最小覆盖",
+    "description": "PI chart列0,1,2,5,6,7，行P,Q,R,S,T,U；每列恰好两个勾，无EPI。给两组3项覆盖PST与QRU，用颜色而非只靠颜色标记。所有PI各覆2点，六个ON点的下界是ceil(6/2)=3项，两组均达下界。Petrick=(P+Q)(P+R)(Q+S)(R+T)(S+U)(T+U)，三次最优单项PST与QRU，不要声称完整Petrick化简只有这两个（还有更大的包含极小覆盖）。",
+    "columns": [0,1,2,5,6,7], "rows": [{"id":"P","mask":[1,1,0,0,0,0]},{"id":"Q","mask":[1,0,1,0,0,0]},{"id":"R","mask":[0,1,0,1,0,0]},{"id":"S","mask":[0,0,1,0,1,0]},{"id":"T","mask":[0,0,0,1,0,1]},{"id":"U","mask":[0,0,0,0,1,1]}],
+    "optimalCovers": [["P","S","T"],["Q","R","U"]]
+  },
+  {
+    "id": "front-m04-trajectory", "module": "m04", "title": "每一步改变覆盖，并立即检查 OFF 集",
+    "description": "f=abc+abc'+a'bc，ON={3,6,7},OFF={0,1,2,4,5}，无DC。这是局部操作教学轨迹，不能标为完整Espresso算法执行。四状态：abc+abc'+a'bc(3项9文字)→ab+abc'+a'bc(3项8文字，expand abc→ab)→ab+a'bc(2项5文字，remove abc')→ab+bc(2项4文字，expand a'bc→bc)。另外虚线回边从ab+bc到abc'+bc，2项5文字，reduce后仍等价，但代价暂增。红叉说明ab→a会误盖100，ab→b会误盖010。",
+    "costs": [9,8,5,4], "covers": ["abc+abc'+a'bc","ab+abc'+a'bc","ab+a'bc","ab+bc"],
+    "steps": ["删掉第一项的c","删除被ab包含的abc'","删掉第二项的a'"]
+  },
+  {
+    "id": "front-m05-factor", "module": "m05", "title": "共享子函数：少一个门，未必少一级延迟",
+    "description": "基线 f=ab+ac：a扇出到两个AND，与b/c分别相与，两AND输出送OR；3个两输入门，最长2级。变换 z=b+c,y=az：1个OR加1个AND，共2门，最长仍2级，a路径从2级变1级，b/c仍2级。下方功能分解表列bc=00,01,10,11，对应剩余a函数0,a,a,a，划分2类，1位z即可编码，z=b+c。理想同门单位成本，不声称真实芯片时延。",
+    "baseline": {"gates":3,"levels":2,"literals":4}, "factored": {"gates":2,"levels":2,"literals":3},
+    "decomposition": [{"bc":"00","cofactor":"0","z":0},{"bc":"01","cofactor":"a","z":1},{"bc":"10","cofactor":"a","z":1},{"bc":"11","cofactor":"a","z":1}]
+  },
+  {
+    "id": "front-m05-decomposition", "module": "m05", "title": "四组 bound 输入，只需要一位中间编码",
+    "description": "f=ab+ac，bound set为(b,c)，free variable为a。四列bc=00,01,10,11对应关于a的余函数0,a,a,a，前列独成类0，其余三列类1；μ=2，ceil(log2 μ)=1位。选择编码z=0,1,1,1得到h=b+c；后级g(a,z)=az。画输入b,c→h→z，与a一起→g→f；标出不能把余函数0和a合类，因为a=1时输出不同。",
+    "columns": ["00","01","10","11"], "cofactors": ["0","a","a","a"], "classCodes": [0,1,1,1], "distinctCofactors": 2, "bits": 1
+  },
+  {
+    "id": "front-m06-bdd", "module": "m06", "title": "同一相等函数，只换变量顺序就从 9 节点变成 6 节点",
+    "description": "f=(a↔c)(b↔d)，所有BDD均为无补边ROBDD，不计两个终端。左顺序a,b,c,d：1个a+2个b+4个c+2个d=9；右顺序a,c,b,d：1个a+2个c+1个b+2个d=6。实线1边，虚线0边，并明确图例。输入0101(a,b,c,d)沿两图均到1；不要把右图按绘制层顺序误认为输入acbd=0101。",
+    "terminals": ["0","1"],
+    "grouped": {"order":["a","b","c","d"],"root":"A","nodes":[["A","a","B0","B1"],["B0","b","C00","C01"],["B1","b","C10","C11"],["C00","c","DN","0"],["C01","c","DP","0"],["C10","c","0","DN"],["C11","c","0","DP"],["DN","d","1","0"],["DP","d","0","1"]]},
+    "interleaved": {"order":["a","c","b","d"],"root":"A","nodes":[["A","a","C0","C1"],["C0","c","B","0"],["C1","c","0","B"],["B","b","DN","DP"],["DN","d","1","0"],["DP","d","0","1"]]},
+    "nodeSchema": ["id","variable","low/0","high/1"]
+  },
+  {
+    "id": "front-m07-fsm", "module": "m07", "title": "101 检测后保留末尾的 1，才能检测重叠",
+    "description": "Mealy边标输入/输出，复位进入S0。S0=没有有效前缀，S1=后缀1，S2=后缀10。S0:0/0→S0,1/0→S1；S1:0/0→S2,1/0→S1；S2:0/0→S0,1/1→S1。强调匹配边回S1而非S0。下方输入10101逐拍表：输出00101，t3,t5各命中一次；每拍画输入、拍前状态、输出、拍后状态。不要增加Moore输出延迟。",
+    "states": [{"id":"S0","meaning":"无有效后缀","code":"00"},{"id":"S1","meaning":"最后匹配1","code":"01"},{"id":"S2","meaning":"最后匹配10","code":"10"}],
+    "edges": [["S0",0,0,"S0"],["S0",1,0,"S1"],["S1",0,0,"S2"],["S1",1,0,"S1"],["S2",0,0,"S0"],["S2",1,1,"S1"]],
+    "trace": [[1,1,"S0",0,"S1"],[2,0,"S1",0,"S2"],[3,1,"S2",1,"S1"],[4,0,"S1",0,"S2"],[5,1,"S2",1,"S1"]],
+    "traceColumns": ["拍","输入","拍前状态","输出","拍后状态"]
+  }
+]

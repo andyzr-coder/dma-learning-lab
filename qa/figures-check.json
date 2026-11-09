@@ -1,0 +1,254 @@
+{
+  "status": "pass",
+  "figures": 20,
+  "renderChecks": [],
+  "method": "同一绘图命令生成SVG与2倍分辨率PNG；Microsoft YaHei字体；原创机制图，数值分别重算。",
+  "numericalChecks": {
+    "front-m01-flow": "8行真值与n中间量独立穷举，与spec逐格一致。",
+    "front-m01-ychart": "人工对照L25 PDF9–10：system/algorithm/RT/logic/circuit由外至内，三域与层级独立。",
+    "front-m01-adder": "8输入同时核验整数和与两carry表达；显式固定XOR2/AND1/OR1及三输入OR，路径4与2。",
+    "front-m02-kmap": "Gray列、minterm编号、全部值与两分组的固定变量独立核验。",
+    "front-m02-cofactor": "8行验证f0=c、f1=b+c及带选择条件的Shannon等式；010反例成立。",
+    "front-m03-quine": "独立枚举27个cube，全部合法极大cube恰为P..U六项，无2-cube。",
+    "front-m03-cover": "覆盖矩阵逐格核验，独立枚举三项组合仅PST/QRU；下界3项。",
+    "front-m04-trajectory": "每阶段8行穷举同ON={3,6,7}；literal9/8/5/4，路径与front specs一致。",
+    "front-m05-factor": "8行等价验证，3门/2门及最长2级按真实导线计数。",
+    "front-m05-decomposition": "四个bc余函数逐个枚举a=0/1，只有00对应0，其余为a；两类一位。",
+    "front-m06-bdd": "独立构造无补边ROBDD，16输入各在两序下核验，非终端9/6。",
+    "front-m07-fsm": "逐拍重算10101→00101，六条边每状态两个输入完备，匹配后回S1。",
+    "back-m08-pulse": "手算沿时间1+3=4、3+3=6，w2<d3过滤；图横轴统一ns。",
+    "back-m08-queue": "按每次输入/输出事件逐项确认队列只包含已生成尚未执行事务；同值0事务明确省略。",
+    "back-m09-delta": "独立按顺序代码求值，signal批量提交，variable立即写；两沿所有6个值与spec一致。",
+    "back-m10-fault": "110、111、100的正常/故障n,y四值分别重算，区分传播与激活失败。",
+    "back-m11-dpath": "110独立重算满足n与y均为(1,0)差异；c0是OR旁路非控制值。",
+    "back-m12-matrix": "独立注入80个故障情况与矩阵逐格一致；穷举输入子集最小4条及全部3组解。",
+    "back-m13-lfsr": "独立4元素bit数组右移与反馈，完整15态序列逐项匹配；零态固定点。",
+    "back-m13-scan": "按4位链实际移入/移出并capture取反，三个图样及响应逐段匹配，共19拍；不重叠27拍。"
+  },
+  "numericalStatus": "pass",
+  "visualReview": {
+    "method": "全部20张PNG以联系表逐张检查；关键电路/波形/BDD/FSM/矩阵/LFSR/Scan放大检查，修改后再次渲染查看。",
+    "reviewedIds": [
+      "front-m01-flow",
+      "front-m01-ychart",
+      "front-m01-adder",
+      "front-m02-kmap",
+      "front-m02-cofactor",
+      "front-m03-quine",
+      "front-m03-cover",
+      "front-m04-trajectory",
+      "front-m05-factor",
+      "front-m05-decomposition",
+      "front-m06-bdd",
+      "front-m07-fsm",
+      "back-m08-pulse",
+      "back-m08-queue",
+      "back-m09-delta",
+      "back-m10-fault",
+      "back-m11-dpath",
+      "back-m12-matrix",
+      "back-m13-lfsr",
+      "back-m13-scan"
+    ],
+    "findings": [],
+    "resolved": [
+      "微软雅黑不支持的↔、₀、₁改为明确XNOR、f0、f1文本",
+      "全加器cin与标题重叠已移开",
+      "故障矩阵右边距留足",
+      "LFSR底部解释文本不压边框",
+      "SVG显式白底以保持深色界面可读性"
+    ]
+  },
+  "glyphCheck": {
+    "fonts": [
+      "Microsoft YaHei",
+      "Microsoft YaHei Bold"
+    ],
+    "missingGlyphs": []
+  },
+  "assetChecks": [
+    {
+      "id": "front-m01-flow",
+      "svgSha256": "7311bbe0bcd7419ca5b25b0fb40368baaf71548fa2ce5f0f572ccf27547f6990",
+      "pngSha256": "43f60adec6d673900e037a28cf1ae7a8ce8c705eedf73833fe24ee61a964d4c4",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m01-ychart",
+      "svgSha256": "c3318b748257ff793ae7a89aabe40b5af3515bbbf1264f80a20f0a75000754bf",
+      "pngSha256": "1d53676a87650b8f0bbe49e59478a81086aaad348e94751904cba0b70c315a8d",
+      "pngPixels": [
+        2800,
+        2000
+      ]
+    },
+    {
+      "id": "front-m01-adder",
+      "svgSha256": "56bf969a1f1ba1fda8a9f3acee363359f9eb7bb600fa9d7fc918d0d990d77e38",
+      "pngSha256": "fc6b4c7a82693577d45cb6231a3defc2037893e02bccd13233ba3c30d400e543",
+      "pngPixels": [
+        2800,
+        2160
+      ]
+    },
+    {
+      "id": "front-m02-kmap",
+      "svgSha256": "ca425d31d74cd2392ecf6c85c19069eb3c117509eef6ebf669d8741ba6e05a34",
+      "pngSha256": "24c4e02895222fb7b708a5aa381babbc1e856b84154e173dfe1ad82456fa392b",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m02-cofactor",
+      "svgSha256": "c8aa340b8a68ea2dc0df07092773b7bad48f93932926464441de2a453b548c8b",
+      "pngSha256": "e0297db93df0f561bded3ae7ea575cbba08d2450cfa10320fe6df8a4b9eca2fc",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m03-quine",
+      "svgSha256": "3e89c3ab04901e58f8fa8c56f3aa3f14031dc879aaf782c3f24506a22b9b7038",
+      "pngSha256": "2a1541184fcd6a3f202c65012b45e364e9df982ba4ccc1e4f78c17da1eaff37b",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m03-cover",
+      "svgSha256": "db39472b15880865eed5dc016f3397d85b01af76023bb84cbcc2e741b4051e01",
+      "pngSha256": "655ce808821272769f1c2f20e760bd065dd38c36dc90ffaf4090bfeea21abcf9",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m04-trajectory",
+      "svgSha256": "8f4a6d0e4b3436aeed7d0eac410f02c959a9b5f8bca42d2c4c194070c76f5d97",
+      "pngSha256": "be1e022896e2e291b0ab53356d769a577bb64dc33535aa4fcdd9101bca8402e4",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m05-factor",
+      "svgSha256": "603d30d6480cb3b5776f5af819e8ecc553403823dd47ea344e6e7fe6ebdb2241",
+      "pngSha256": "c9dd02ccb696e8c6b33acdd9a7e41297e56ef92dfebfa45decb2de4824d1ca71",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m05-decomposition",
+      "svgSha256": "08e5bd6c643992c052895d0ab2c29bc2a258f8e6b53be209274de6d25a3f8096",
+      "pngSha256": "ef53197c1073496b9c52c5f838767825d4208af9b05ead74e2b2d97b89f328f7",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "front-m06-bdd",
+      "svgSha256": "2c0b77512a8ac6ec23b38df7f43f94c8193cd90bb4367588d9918c353e4b45b6",
+      "pngSha256": "660a135410e3784520eefca0433df92fd0d932356b2a4fee7c995d7c6c82f154",
+      "pngPixels": [
+        2800,
+        1880
+      ]
+    },
+    {
+      "id": "front-m07-fsm",
+      "svgSha256": "6f6c74823b59e2d151c53a8f2140318c515928df80f890ec08b8f63c728fa683",
+      "pngSha256": "896cd4d13f720a763fb68d25b53bb4219a2a294e17f4b8e26af9b1c6dd72a354",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "back-m08-pulse",
+      "svgSha256": "d229fcd4d645f3560b61aa109c010e44c388c8b8c20974dd446da1f6a1870db4",
+      "pngSha256": "6ae73c214cbf04371e92cc27f69da0565d9c4806ebe3d2b794f969667719410b",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "back-m08-queue",
+      "svgSha256": "688f5c0b22dcf4e2f9c2146a5214f199147ade2692d20a65d404632eb9db8a4f",
+      "pngSha256": "67ed077d269a7121d1dc5c267109a442719a19904718a657ed0ce94e94b8914e",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "back-m09-delta",
+      "svgSha256": "2ee30113e1a100051b9319b3133998336933c085de25630fc410a63f1907e14b",
+      "pngSha256": "07dc61108f83e43bc611dc0ed440dd327628ed6036b2b16bcbe5939ee60a67e9",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "back-m10-fault",
+      "svgSha256": "3c7f385df73d05b77ed724010603e4711b2c2f6f8ba3162e3cb9c428516ac528",
+      "pngSha256": "a4d7c9be753e3af3b63a7a2b7e73a4fb8addc574271a0d7cd9682842a883a977",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "back-m11-dpath",
+      "svgSha256": "8336b2c2577d114efdfd6a4beaa45b6dd42ebb8a62f1251e5115e4a7d65abb88",
+      "pngSha256": "0cc5a5325118ef550c5e7e9c28c1f78557a29ac32aec91b39b40d06fe4dd7e21",
+      "pngPixels": [
+        2400,
+        1640
+      ]
+    },
+    {
+      "id": "back-m12-matrix",
+      "svgSha256": "7a215b5e38207f0c26e0cb095a6ddacdd283d7cf124e3c854156ca2b9ea65ab0",
+      "pngSha256": "f117958cee7d3d587c22ce35e7ce4ebb991a0ab301fb45788039820f58c6226f",
+      "pngPixels": [
+        2800,
+        1760
+      ]
+    },
+    {
+      "id": "back-m13-lfsr",
+      "svgSha256": "4a148fb7704bb1ccf941ef1951406703abc5a0820a37cff0d2f266faff9f785b",
+      "pngSha256": "534a0a37adf7bfce14d52b7140c8e72c7c2e051bc71d28111d563631a192020e",
+      "pngPixels": [
+        2800,
+        1960
+      ]
+    },
+    {
+      "id": "back-m13-scan",
+      "svgSha256": "6375b857ccb9e29cb4ea26a8942afc731d17300761f63c033ef8a8e1955b615d",
+      "pngSha256": "6025864412b71c8e45e169138b20063829d4b87a75f2a09d9db1d7a7dc4977ff",
+      "pngPixels": [
+        2800,
+        1920
+      ]
+    }
+  ],
+  "coverage": "m01–m13每章至少1张，总20张，含2幅额外m01图和1幅m05余函数图。",
+  "sourcePolicy": "全部为原创代码绘制的机制图；未镜像、裁切或重新发布原始PDF图片。Y-chart定位L25 PDF9–10。",
+  "limits": "SVG文本由设备字体渲染，内置字体栈Microsoft YaHei/Noto Sans CJK SC；PNG固定微软雅黑2倍分辨率。网站交互与PDF嵌入后的最终布局由根任务验收。"
+}

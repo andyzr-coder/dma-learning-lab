@@ -1,20 +1,23 @@
 {
-  "date": "2026-11-08",
-  "method": "Static source review, no browser or build mutation",
-  "modules": 13,
-  "exercises": 79,
-  "sources": 118,
-  "routeDays": 10,
-  "routeMinutes": 2940,
-  "moduleCoverage": "All modules included in ten-day plan",
-  "issues": [],
-  "manualFixes": [
-    "Reserved F088 for Day 8 and F055 for Day 9; earlier practice replaced with verified F086/F087 or original module exercises",
-    "F086 locators now distinguish filename19_retake from actual date2020-06-29"
+  "date": "2026-11-09",
+  "revision": "illustrated-guided",
+  "status": "pass",
+  "sharedContent": {
+    "modules": 13,
+    "figures": 20,
+    "steps": 73,
+    "checkpoints": 86,
+    "chapterExercises": 79,
+    "paperQuestions": 16,
+    "papers": 2,
+    "routeDays": 10,
+    "routeMinutes": 2940
+  },
+  "scope": [
+    "所有每日任务改为站内章号、题号、实验参数与两份完整训练卷；主线无外部阅读前置。",
+    "原始讲义和试卷继续仅保留来源索引，未复制到公开包。",
+    "每章图解、检查题、答案从同一JSON进入网站、独立HTML和PDF；20张图在HTML中内嵌，在PDF中用高清PNG。",
+    "图与新增算例由独立计算核验；详见front-walkthrough-check、figures-check和测试脚本。"
   ],
-  "buildRecommendations": [
-    "Minor formatting: join mock.instructions explicitly for PDF Markdown instead of implicit array-to-string comma joining"
-  ],
-  "buildFollowup": "Parent has added bibliography publication/access dates and offline HTML mock title/duration/total/instructions; intro slice now guards missing heading.",
-  "contentReview": "Read modules m01-m13; no remaining mathematical error identified; no nonstandard math delimiters found in module JSON"
+  "priorVersion": "2026-11-08审计对应的原卷路线已由本版自包含路线替代。"
 }
